@@ -70,6 +70,28 @@ void	push(t_info *stack_A, int data)
 	stack_A->size++;
 }
 
+void	push_front(t_info *node, int data)
+{
+	t_list *tmp;
+	
+	tmp = (t_list *)malloc(sizeof(t_list));
+	tmp->data = data;
+	tmp->prev = NULL;
+	if (node->head == NULL)
+	{
+		tmp->next = NULL;
+		node->head = tmp;
+		node->tail = tmp;
+	}
+	else
+	{
+		tmp->next = node->head;
+		node->head->prev = tmp;
+		node->head = tmp;
+	}
+	node->size++;
+}
+
 void	pop_back(t_info *stack)
 {
 	t_list	*tmp;
@@ -216,22 +238,26 @@ void	rrb(t_info *stack_B, int flag)
 	tmp->prev = NULL;
 	stack_B->head = tmp;
 	if (flag == TRUE)
-		ft_putstr("rra\n");
+		ft_putstr("rrb\n");
 }
 
 void	ra(t_info *stack_A, int flag)
 {
 	t_list	*tmp;
+	int		data;
 
 	if (!stack_A || stack_A->size < 2)
 		return ;
-	tmp = stack_A->head;
+	/* tmp = stack_A->head;
 	stack_A->head = stack_A->head->next;
 	stack_A->head->prev = NULL;
 	stack_A->tail->next = tmp;
 	tmp->prev = stack_A->tail;
 	tmp->next = NULL;
-	stack_A->tail = tmp;
+	stack_A->tail = tmp; */
+	data = stack_A->head->data;
+	pop_front(stack_A);
+	push(stack_A, data);
 	if (flag == TRUE)
 		ft_putstr("ra\n");
 }
@@ -239,16 +265,20 @@ void	ra(t_info *stack_A, int flag)
 void	rb(t_info *stack_B, int flag)
 {
 	t_list	*tmp;
+	int		data;
 
 	if (!stack_B || stack_B->size < 2)
 		return ;
-	tmp = stack_B->head;
+	/* tmp = stack_B->head;
 	stack_B->head = stack_B->head->next;
 	stack_B->head->prev = NULL;
 	stack_B->tail->next = tmp;
 	tmp->next = NULL;
 	tmp->prev = stack_B->tail;
-	stack_B->tail = tmp;
+	stack_B->tail = tmp; */
+	data = stack_B->head->data;
+	pop_front(stack_B);
+	push(stack_B, data);
 	if (flag == TRUE)
 		ft_putstr("rb\n");
 }
@@ -266,18 +296,16 @@ void	rr(t_info *stack_A, t_info *stack_B)
 
 void	sa(t_info *stack_A, int flag)
 {
-	t_list	*tmp;
-
+	int	data_new;
+	int	data_old;
 	if (!stack_A || stack_A->size < 2)
 		return ;
-	tmp = stack_A->head->next;
-	stack_A->head->next = stack_A->head->next->next;
-	if (stack_A->head->next)
-		stack_A->head->next->prev = stack_A->head;
-	stack_A->head->prev = tmp;
-	tmp->prev = NULL;
-	tmp->next = stack_A->head;
-	stack_A->head = tmp;
+	data_old = stack_A->tail->data;
+	data_new = stack_A->tail->prev->data;
+	pop_back(stack_A);
+	pop_back(stack_A);
+	push(stack_A, data_old);
+	push(stack_A, data_new);
 	if (flag == TRUE)
 		ft_putstr("sa\n");
 }
@@ -285,17 +313,17 @@ void	sa(t_info *stack_A, int flag)
 void	sb(t_info *stack_B, int flag)
 {
 	t_list	*tmp;
+	int	data_new;
+	int	data_old;
 
 	if (!stack_B || stack_B->size < 2)
 		return ;
-	tmp = stack_B->head->next;
-	stack_B->head->next = stack_B->head->next->next;
-	if (stack_B->head->next)
-		stack_B->head->next->prev = stack_B->head;
-	stack_B->head->prev = tmp;
-	tmp->prev = NULL;
-	tmp->next = stack_B->head;
-	stack_B->head = tmp;
+	data_old = stack_B->tail->data;
+	data_new = stack_B->tail->prev->data;
+	pop_back(stack_B);
+	pop_back(stack_B);
+	push(stack_B, data_old);
+	push(stack_B, data_new);
 	if (flag == TRUE)
 		ft_putstr("sb\n");
 }
@@ -346,50 +374,107 @@ void	rrr(t_info *stack_A, t_info *stack_B)
 	ft_putstr("rrr\n");
 }
 
-/* 스택 A에서 가장 작은 값을 스택 B로 이동 */
-void move_min_to_b(t_info *stack_a, t_info *stack_b)
+void merge(int arr[], int left[], int left_size, int right[], int right_size) 
 {
-    int min_val = stack_a->tail->data;
-    t_list *min_node = stack_a->tail;
-    /* 스택 A에서 최소값 탐색 */
-    if (min_val > stack_a->head->data)
-    {
-        min_val = stack_a->head->data;
-        min_node = stack_a->head;
+    int i = 0, j = 0, k = 0;
+
+    while (i < left_size && j < right_size) {
+        if (left[i] <= right[j]) {
+            arr[k++] = left[i++];
+        } else {
+            arr[k++] = right[j++];
+        }
     }
-    if (min_val > stack_a->tail->prev->data)
-    {
-        min_val = stack_a->tail->prev->data;
-        min_node = stack_a->tail->prev;
+
+    while (i < left_size) {
+        arr[k++] = left[i++];
     }
-    if (min_val > stack_a->head->next->data)
-    {
-        min_val = stack_a->head->next->data;
-        min_node = stack_a->head->next;
+
+    while (j < right_size) {
+        arr[k++] = right[j++];
     }
-    /* 스택 A에서 최소값을 스택 B로 이동 */
-    if (min_node == stack_a->head)
-        ra(stack_a, TRUE); // 최소값이 스택 A의 맨 위에 있을 때
-    else if (min_node == stack_a->tail->prev)
-        rra(stack_a, TRUE); // 최소값이 스택 A의 맨 아래에 있을 때
-    if (min_node == stack_a->head || min_node == stack_a->head->next)
-        pb(stack_a, stack_b); // 최소값이 스택 A의 위쪽에 있을 때
-    else if (min_node == stack_a->tail || min_node == stack_a->tail->prev)
-        pb(stack_a, stack_b); // 최소값이 스택 A의 아래쪽에 있을 때
 }
 
-/* 스택을 정렬하는 함수 */
-void sort_stack(t_info *stack_a, t_info *stack_b)
+void merge_sort(int arr[], int size) 
 {
-	int i = 0;
-    /* 예외 처리 */
-    if (stack_a == NULL || stack_a->head == NULL || stack_a->size < 2)
+    if (size < 2) {
         return;
-    /* 스택 A의 모든 원소를 스택 B로 이동 */
-    while (i < stack_a->size / 2)
-        move_min_to_b(stack_a, stack_b);
-    /* 스택 B에서 스택 A로 이동 */
+    }
+
+    int mid = size / 2;
+    int left[mid];
+    int right[size - mid];
+
+    for (int i = 0; i < mid; i++) {
+        left[i] = arr[i];
+    }
+
+    for (int i = mid; i < size; i++) {
+        right[i - mid] = arr[i];
+    }
+
+    merge_sort(left, mid);
+    merge_sort(right, size - mid);
+    merge(arr, left, mid, right, size - mid);
 }
+
+void	get_pivot(int *p1, int *p2, t_info a)
+{
+	int	*arr;
+	int	i;
+
+	if (a.size == 1 || a.size == 2)
+	{
+		*p1 = a.head->data;
+		*p1 = a.tail->data;
+		return ;
+	}
+	arr = (int *)malloc(sizeof(int) * a.size);
+	if (!arr)
+		return ;
+	i = 0;
+	while (a.head)
+	{
+		arr[i] = a.head->data;
+		a.head = a.head->next;
+		i++;
+	}
+	merge_sort(arr, a.size);
+	*p1 = arr[(a.size / 3) - 1];
+	*p2 = arr[((a.size / 3) * 2) - 1];
+}
+
+void a_to_b(t_info *a, t_info *b, int cnt)
+{
+    int pivot1, pivot2;
+
+    if (cnt < 5)
+	{
+		// 정렬하드코딩
+        return;
+	}
+    else
+    {
+		get_pivot(&pivot1, &pivot2, *a);
+        for (int i = 0; i < cnt; i++)
+        {
+            if (a->tail->data > pivot2)
+                ra(a, TRUE);
+            else if (a->tail->data >= pivot1 && a->tail->data <= pivot2)
+            {
+                pb(a, b);
+            }
+            else
+			{
+                pb(a, b);
+				rrb(b, TRUE);
+			}
+        }
+    }
+	a_to_b(a, b, a->size);
+	int z = 3;
+}
+
 int main(int ac, char **av)
 {
 	t_info *stack_A;
@@ -400,6 +485,7 @@ int main(int ac, char **av)
 	set_list(&stack_A);
 	set_list(&stack_B);
 	ft_init(stack_A, ac, av);
-	sort_stack(stack_A, stack_B);
+	a_to_b(stack_A, stack_B, stack_A->size);
+	int z = 3;
 	return (0);
 }
