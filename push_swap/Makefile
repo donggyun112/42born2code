@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Werror
+CFLAGS = -Werror -fsanitize=address
 NAME = push_swap
 HEAD = test.h
 SRCS = test.c
