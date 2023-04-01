@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 17:25:37 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/03/31 20:25:49 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/02 01:08:46 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ typedef struct s_info
 {
 	int				size;
 	int				is_odd;
+	int				run_checker;
+	int				is_end;
 	char			name;
 	struct s_list	*head;
 	struct s_list	*tail;
@@ -46,7 +48,14 @@ typedef struct s_check
 	char	**split_tmp;
 	char	*itoa_tmp;
 	int		data;
-	int		flag_to_delete;
 }	t_check;
+
+typedef struct s_merge
+{
+	int	left_size;
+	int	right_size;
+	int	*left;
+	int	*right;
+}	t_merge;
 
 #endif

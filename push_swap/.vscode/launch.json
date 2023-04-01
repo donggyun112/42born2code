@@ -6,7 +6,7 @@
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [
-				"4", "2", "3", "1", "0"
+				"1", "3", "2"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -18,37 +18,3 @@
     ],
     "version": "2.0.0"
 }
-/*
-void	sort_three(t_info *a)
-{
-	int a_t;
-	int a_tp;
-	int a_tpp;
-
-	a_t = a->tail->data;
-	a_tp = a->tail->prev->data;
-	a_tpp = a->tail->prev->prev->data;
-	if (a_t > a_tp && a_t > a_tpp)
-	{
-		sa(a, TRUE);
-		ra(a, TRUE);
-		sa(a, TRUE);
-		rra(a, TRUE);
-		if (a_tp > a_tpp)
-			sa(a, TRUE);
-	}
-	else if (a_tp > a_t && a_tp > a_tpp)
-	{
-		ra(a, TRUE);
-		sa(a, TRUE);
-		rra(a, TRUE);
-		if (a_tp > a_tpp)
-			sa(a, TRUE);
-	}
-	else
-	{
-		if (a_t > a_tp)
-			sa(a, TRUE);
-	}
-}
-*/

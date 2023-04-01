@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/01 20:04:37 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/04/02 01:17:52 by dongkseo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "test.h"
 #include "ft_split.c"
 #include "ft_itoa.c"
@@ -7,7 +19,7 @@
 #define TRUE 1
 #define FALSE 0
 
-void merge(int arr[], int left[], int left_size, int right[], int right_size) 
+void merge(int arr[], int left[], t_merge t, int right[])
 {
 	int	i;
 	int	j;
@@ -16,41 +28,46 @@ void merge(int arr[], int left[], int left_size, int right[], int right_size)
 	i = 0;
 	j = 0;
 	k = 0;
-	while (i < left_size && j < right_size)
+	while (i < t.left_size && j < t.right_size)
 	{
 		if (left[i] <= right[j])
 			arr[k++] = left[i++];
 		else
 			arr[k++] = right[j++];
 	}
-	while (i < left_size)
+	while (i < t.left_size)
 		arr[k++] = left[i++];
-	while (j < right_size)
+	while (j < t.right_size)
 		arr[k++] = right[j++];
 }
 
 void	merge_sort(int *arr, int size)
 {
 	const int	mid = size / 2;
-	int			*left;
-	int			*right;
 	int			i;
+	t_merge		t;
 
 	if (size < 2)
 		return ;
-	left = (int *)malloc(sizeof(int) * mid);
-	right = (int *)malloc(sizeof(int) * size - mid);
+	t.left = (int *)malloc(sizeof(int) * mid);
+	if (!t.left)
+		return ;
+	t.right = (int *)malloc(sizeof(int) * size - mid);
+	if (!t.right)
+		return ;
 	i = -1;
 	while (++i < mid)
-		left[i] = arr[i];
+		t.left[i] = arr[i];
 	i = mid - 1;
 	while (++i < size)
-		right[i - mid] = arr[i];
-	merge_sort (left, mid);
-	merge_sort (right, size - mid);
-	merge (arr, left, mid, right, size - mid);
-	free(left);
-	free(right);
+		t.right[i - mid] = arr[i];
+	merge_sort (t.left, mid);
+	merge_sort (t.right, size - mid);
+	t.left_size = mid;
+	t.right_size = size - mid;
+	merge (arr, t.left, t, t.right);
+	free(t.left);
+	free(t.right);
 }
 
 int	ft_atoi(const char *str)
@@ -87,6 +104,8 @@ void	push(t_info *stack_a, int data)
 	t_list	*tmp;
 
 	tmp = (t_list *)malloc(sizeof(t_list));
+	if (!tmp)
+		exit(-1);
 	tmp->data = data;
 	if (stack_a->head == NULL)
 	{
@@ -110,6 +129,8 @@ void	push_front(t_info *node, int data)
 	t_list	*tmp;
 
 	tmp = (t_list *)malloc(sizeof(t_list));
+	if (!tmp)
+		exit(-1);
 	tmp->data = data;
 	tmp->prev = NULL;
 	if (node->head == NULL)
@@ -257,6 +278,27 @@ void	ft_init_split_data(t_info *stack, t_check *t)
 	}
 }
 
+void	is_sorted(t_info *stack)
+{
+	t_list	*node;
+	int		t;
+
+	node = stack->head;
+	t = 0;
+	while (node->next)
+	{
+		if (node->data < node->next->data)
+			t++;
+		node = node->next;
+	}
+	if (!t)
+	{
+		if (stack->run_checker)
+			ft_putstr("OK\n");
+		exit(0);
+	}
+}
+
 void	ft_init(t_info *stack, int ac, char **av)
 {
 	int		i;
@@ -268,7 +310,7 @@ void	ft_init(t_info *stack, int ac, char **av)
 	while (++i < ac)
 	{
 		t.split_tmp = ft_split(av[i], ' ');
-		if (!t.split_tmp)
+		if (!t.split_tmp || !*(t.split_tmp))
 			error_exit();
 		else
 		{
@@ -288,6 +330,8 @@ void	ft_init(t_info *stack, int ac, char **av)
 void	set_list(t_info **node, char name)
 {
 	*node = (t_info *)malloc(sizeof(t_info));
+	if (!*node)
+		return ;
 	(*node)->head = NULL;
 	(*node)->tail = NULL;
 	(*node)->size = 0;
@@ -341,9 +385,7 @@ int	rotation(t_info *stack)
 
 void	rra(t_info *stack_a, int flag)
 {
-	t_list	*tmp;
 	int		data;
-	int		rank;
 
 	if (flag == TRUE)
 		ft_putstr("rra\n");
@@ -356,7 +398,6 @@ void	rra(t_info *stack_a, int flag)
 
 void	rrb(t_info *stack_b, int flag)
 {
-	t_list	*tmp;
 	int		data;
 
 	if (flag == TRUE)
@@ -376,7 +417,8 @@ void	rr(t_info *stack_a, t_info *stack_b)
 		return ;
 	ra(stack_a, FALSE);
 	rb(stack_b, FALSE);
-	ft_putstr("rr\n");
+	if (!stack_a->run_checker)
+		ft_putstr("rr\n");
 }
 
 void	sa(t_info *stack_a, int flag)
@@ -398,7 +440,6 @@ void	sa(t_info *stack_a, int flag)
 
 void	sb(t_info *stack_b, int flag)
 {
-	t_list	*tmp;
 	int	data_new;
 	int	data_old;
 
@@ -423,7 +464,8 @@ int	pa(t_info *stack_a, t_info *stack_b)
 	data = stack_b->tail->data;
 	pop_back(stack_b);
 	push(stack_a, data);
-	ft_putstr("pa\n");
+	if (!stack_a->run_checker)
+		ft_putstr("pa\n");
 	return (1);
 }
 
@@ -436,13 +478,15 @@ int	pb(t_info *stack_a, t_info *stack_b)
 	data = stack_a->tail->data;
 	pop_back(stack_a);
 	push(stack_b, data);
-	ft_putstr("pb\n");
+	if (!stack_a->run_checker)
+		ft_putstr("pb\n");
 	return (1);
 }
 
 void	ss(t_info *stack_a, t_info *stack_b)
 {
-	ft_putstr("ss\n");
+	if (!stack_a->run_checker)
+		ft_putstr("ss\n");
 	if (!stack_a || stack_a->size < 2)
 		return ;
 	if (!stack_b || stack_b->size < 2)
@@ -453,7 +497,8 @@ void	ss(t_info *stack_a, t_info *stack_b)
 
 void	rrr(t_info *stack_a, t_info *stack_b)
 {
-	ft_putstr("rrr\n");
+	if (!stack_a->run_checker)
+		ft_putstr("rrr\n");
 	if (!stack_a || stack_a->size < 2)
 		return ;
 	if (!stack_b || stack_b->size < 2)
@@ -489,6 +534,12 @@ void a_to_b(t_info *a, t_info *b, int cnt);
 
 void	revers_stack(t_info *a, t_info *b, int ra, int rb)
 {
+	if (!a->is_end)
+	{
+		while (rb-- > 0)
+			rrb(b, 1);
+		return ;
+	}
 	if (ra > rb)
 	{
 		ra -= rb;
@@ -605,7 +656,7 @@ int	sort_two(t_info *stack)
 	return (0);
 }
 
-void	sort_revers_three(t_info *a, t_info *b)
+void	sort_revers_three(t_info *b)
 {
 	if (b->size < 3)
 		return ;
@@ -643,14 +694,14 @@ void	sort_a(t_info *a, int cnt)
 {
 	if (cnt == 2)
 		sort_two(a);
-	else
+	if (cnt == 3)
 		sort_three(a);
 }
 
 void	sort_b(t_info *a, t_info *b, int cnt)
 {
 	if (cnt == 3)
-		sort_revers_three(a, b);
+		sort_revers_three(b);
 	if (cnt == 2)
 		sort_revers_two(b);
 	__push(a, b, cnt);
@@ -664,6 +715,7 @@ void	b_to_a(t_info *a, t_info *b, int cnt)
 	if (cnt <= 2)
 	{
 		sort_b(a, b, cnt);
+		b->is_end = 1;
 		return ;
 	}
 	get_pivot(&t.pivot2, &t.pivot1, b, cnt);
@@ -692,6 +744,7 @@ void a_to_b(t_info *a, t_info *b, int cnt)
 	if (cnt <= 3)
 	{
 		sort_a(a, cnt);
+		a->is_end = 1;
 		return ;
 	}
 	get_pivot(&t.pivot2, &t.pivot1, a, cnt);
@@ -726,6 +779,8 @@ void	sort_five(t_info *a, t_info *b)
 	int	do_func;
 
 	do_func = pb(a, b) + pb(a, b) + simplesort(a) + sort_two(b);
+	if (do_func < 0)
+		return ;
 	max = a->head->data;
 	if (a->head->data < b->tail->data)
 	{
@@ -770,22 +825,8 @@ void	check_odd(t_info *stack_a, t_info *stack_b)
 	}
 }
 
-int main(int ac, char **av)
+void	leaks()
 {
-	t_info	*stack_a;
-	t_info	*stack_b;
-
-	if (ac < 2)
-		return (-1);
-	set_list(&stack_a, 'a');
-	ft_init(stack_a, ac, av);
-	set_list(&stack_b, 'b');
-	check_odd(stack_a, stack_b);
-	if (stack_a->size == 3)
-		simplesort(stack_a);
-	else if (stack_a->size == 5)
-		sort_five(stack_a, stack_b);
-	else
-		a_to_b(stack_a, stack_b, stack_a->size);
-	exit(0);
+	system("leaks push_swap");
 }
+
