@@ -6,7 +6,7 @@
 /*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 20:04:37 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/02 01:17:52 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/02 04:08:02 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,6 +283,8 @@ void	is_sorted(t_info *stack)
 	t_list	*node;
 	int		t;
 
+	if (stack->size < 1)
+		return ;
 	node = stack->head;
 	t = 0;
 	while (node->next)
@@ -499,10 +501,6 @@ void	rrr(t_info *stack_a, t_info *stack_b)
 {
 	if (!stack_a->run_checker)
 		ft_putstr("rrr\n");
-	if (!stack_a || stack_a->size < 2)
-		return ;
-	if (!stack_b || stack_b->size < 2)
-		return ;
 	rra(stack_a, FALSE);
 	rrb(stack_b, FALSE);
 }

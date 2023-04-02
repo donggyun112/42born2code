@@ -32,7 +32,7 @@ void	check_command(const char *line, t_info *a, t_info *b)
 	else
 		error_exit();
 }
-
+#include <stdio.h>
 int main(int ac, char **av)
 {
 	t_info	*stack_a;
