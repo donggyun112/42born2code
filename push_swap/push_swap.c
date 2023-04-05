@@ -3,24 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 23:03:34 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/02 01:18:51 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/04 01:55:55 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "test.h"
-#include "test.c"
+#include "push_swap.h"
 
-int main(int ac, char **av)
+void	leaks(void)
+{
+	system("leaks push_swap");
+}
+
+int	main(int ac, char **av)
 {
 	t_info	*stack_a;
 	t_info	*stack_b;
 
 	if (ac < 2)
 		return (-1);
-	//atexit(leaks);
 	set_list(&stack_a, 'a');
 	stack_a->run_checker = 0;
 	ft_init(stack_a, ac, av);

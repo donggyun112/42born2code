@@ -1,9 +1,16 @@
-#include "test.h"
-#include "get_next_line.h"
-#include "get_next_line.c"
-#include "get_next_line_utils.c"
-#include "test.c"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   chacker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/02 22:15:54 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/04/03 12:52:37 by dongkseo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
 
 void	check_command(const char *line, t_info *a, t_info *b)
 {
@@ -32,8 +39,8 @@ void	check_command(const char *line, t_info *a, t_info *b)
 	else
 		error_exit();
 }
-#include <stdio.h>
-int main(int ac, char **av)
+
+int	main(int ac, char **av)
 {
 	t_info	*stack_a;
 	t_info	*stack_b;
@@ -53,7 +60,8 @@ int main(int ac, char **av)
 		check_command(line, stack_a, stack_b);
 		free(line);
 	}
-	is_sorted(stack_a);
+	if (!stack_b->size)
+		is_sorted(stack_a);
 	ft_putstr("KO\n");
 	exit(0);
 }

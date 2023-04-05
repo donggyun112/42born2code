@@ -1,16 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_num_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/14 16:41:50 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/03/14 16:52:59 by dongkseo         ###   ########.fr       */
+/*   Created: 2023/04/02 21:40:40 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/04/02 21:41:44 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "push_swap.h"
+
+int	ft_atoi(const char *str)
+{
+	int	sum;
+	int	sign;
+
+	sum = 0;
+	sign = 1;
+	while (*str == 32 || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign *= -1;
+		str++;
+	}
+	while (*str >= '0' && *str <= '9')
+	{
+		sum = sum * 10 + (*str - '0');
+		str++;
+	}
+	return (sum * sign);
+}
 
 int	nb_len(long long nb)
 {
