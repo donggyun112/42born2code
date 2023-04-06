@@ -1,0 +1,24 @@
+total 600
+drwxr-xr-x  23 dongkseo  2023_seoul    782  4  7 04:53 .
+drwxrwxrwx  11 dongkseo  2023_seoul    374  4  5 13:26 ..
+-rw-r--r--@  1 dongkseo  2023_seoul   8196  4  5 18:21 .DS_Store
+drwxr-xr-x   4 dongkseo  2023_seoul    136  4  5 13:47 .vscode
+drwxr-xr-x  50 dongkseo  2023_seoul   1700  4  5 14:08 Libft
+-rwxr-xr-x   1 dongkseo  2023_seoul  51096  4  7 04:53 a.out
+-rwxr-xr-x   1 dongkseo  2023_seoul  52536  4  7 03:25 pipex
+-rw-r--r--   1 dongkseo  2023_seoul   3199  4  7 04:52 pipex.c
+drwxr-xr-x   3 dongkseo  2023_seoul    102  4  4 12:21 pipex.dSYM
+-rw-r--r--   1 dongkseo  2023_seoul    518  4  7 04:35 pipex.h
+-rw-r--r--   1 dongkseo  2023_seoul      6  4  7 03:02 test.txt
+-rwxr-xr-x   1 dongkseo  2023_seoul      0  4  7 03:25 test2.txt
+-rwxr-xr-x   1 dongkseo  2023_seoul  49792  4  6 20:40 test_dup
+-rw-r--r--   1 dongkseo  2023_seoul    302  4  6 18:47 test_dup.c
+drwxr-xr-x   3 dongkseo  2023_seoul    102  4  5 16:09 test_dup.dSYM
+-rwxr-xr-x   1 dongkseo  2023_seoul  50712  4  5 19:52 test_execve
+-rw-r--r--   1 dongkseo  2023_seoul   1207  4  5 19:51 test_execve.c
+drwxr-xr-x   3 dongkseo  2023_seoul    102  4  5 19:47 test_execve.dSYM
+-rwxr-xr-x   1 dongkseo  2023_seoul  49960  4  5 17:32 test_fork
+-rw-r--r--   1 dongkseo  2023_seoul    469  4  6 16:13 test_fork.c
+drwxr-xr-x   3 dongkseo  2023_seoul    102  4  5 14:42 test_fork.dSYM
+-rwxr-xr-x   1 dongkseo  2023_seoul      6  4  7 03:03 tesx2.txt
+-rwxr-xr-x   1 dongkseo  2023_seoul      0  4  7 04:53 text2.txt

@@ -29,78 +29,53 @@ char	*get_path(char **av, char **env)
 	return (path);
 }
 
-void	exit_error(const char *error, int errorcode)
+void	exit_error(const char *error, int errorcode, int error_status)
 {
-	printf_error(error);
+	if (error_status == EXIT_FAILURE)
+		printf_error(error);
+	else
+		ft_putstr_fd(error, STDERR_FILENO);
 	exit(errorcode);
 }
 
-int	ft_listsize(t_cmd *q)
+void	do_cmd(pid_t pid, t_cmd *q, t_av *t, char **env)
 {
-	int i = 0;
-	while (q)
+	if (pid == CHILD)
 	{
-		i++;
-		q = q->next;
-	}
-	return (i);
-}
-
-#include <stdio.h>
-
-int l;
-void	run_proccess(t_av t, char **av, char **env, t_cmd *q)
-{
-	int	fd[2];
-	int	i;
-	int	size = ft_listsize(q);
-	int	status;
-	char	buff[200];
-	pid_t pid;
-
-	// fd[1] = 입력 // fd[0] = 출력
-	i = 0;
-	if (pipe(fd) < 0)
-		exit_error("pipe Error", -1);
-	for (int x = 0; x < 4; x++)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			//dprintf(fd[1], "%d", getpid());
-			// printf("pid : %d, ppid : %d", getpid(), getppid());
-			printf("?");
-			
-		}
+		dup2(t->infile, STDIN_FILENO);
+		if (q->next)
+			dup2(t->fd[WRITE], STDOUT_FILENO);
 		else
-		{
-			// exit(0);
-			//printf("pid : %d", getpid());
-			printf("p\n");
-			wait(&status);
-		}
-	}
-	/* if (pid == 0)
-	{
-		close(fd[0]);
-		dup2(t.infile, STDIN_FILENO);
-		dup2(fd[1], STDOUT_FILENO);
-		close(t.infile);
-		close(fd[1]);
-		if (execve(t.infile_cmd, t.parse_cmd1, env) == -1)
-			exit_error("command not found", 127);
+			dup2(t->outfile, STDOUT_FILENO);
+		close(t->fd[READ]);
+		close(t->fd[WRITE]);
+		execve(q->cmd, q->parse_cmd, env);
+		exit_error("execve Error", -1, EXIT_FAILURE);
 	}
 	else
 	{
-		wait(&status);
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		dup2(t.outfile, STDOUT_FILENO);
-		close(t.outfile);
-		close(fd[0]);
-		if (execve(t.outfile_cmd, t.parse_cmd2, env) == -1)
-			exit_error("command not found", 127);
-	} */
+		close(t->fd[WRITE]);
+		t->infile = t->fd[READ];
+	}
+}
+
+void	run_proccess(t_av t, char **env, t_cmd *q)
+{
+	int	status;
+	pid_t pid;
+
+	while (q)
+	{
+		if (pipe(t.fd) < 0)
+			exit_error("pipe Error", -1, EXIT_FAILURE);
+		pid = fork();
+		do_cmd(pid, q, &t, env);
+		q = q->next;
+	}
+	while (wait(&status) > 0)
+		;
+	close(t.infile);
+	close(t.outfile);
 }
 
 void	parse_cmd(t_cmd *t, char **av)
@@ -116,50 +91,66 @@ void	parse_cmd(t_cmd *t, char **av)
 	}
 }
 
+void	free_all(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
+}
+
 char	*get_cmd(char *path, char **env, char *cmd)
 {
-	char	**split_path;
-	char	*cmd_path;
-	char	**tmp;
+	t_parse	t;
 	int		i;
 	int		fd;
 
 	cmd = makecmd(cmd);
-	split_path = ft_split(path, ':');
-	cmd_path = ft_strjoin("/", cmd);
+	t.split_path = ft_split(path, ':');
+	t.cmd_path = ft_strjoin("/", cmd);
+	free(cmd);
 	i = 0;
-	while (split_path[i])
+	while (t.split_path[i])
 	{
-		cmd = ft_strjoin(split_path[i], cmd_path);
+		cmd = ft_strjoin(t.split_path[i], t.cmd_path);
 		fd = access(cmd, X_OK);
 		if (!fd)
 		{
-			free(cmd_path);
+			free_all(t.split_path);
+			free(t.cmd_path);
 			return (cmd);
 		}
 		free(cmd);
 		close(fd);
 		i++;
 	}
-	free(cmd_path);
+	free(t.cmd_path);
+	free_all(t.split_path);
 	return (NULL);
 }
 
 void	push_cmd(t_cmd **node, char *cmd)
 {
 	t_cmd	*tmp;
+	t_cmd	*head;
 	tmp = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!tmp)
-		exit_error("allocate fail", -1);
+		exit_error("allocate fail", -1, EXIT_FAILURE);
 	tmp->cmd = cmd;
 	tmp->next = NULL;
 	if (!*node)
 		*node = tmp;
 	else
 	{
-		while ((*node)->next)
-			*node = (*node)->next;
-		(*node)->next = tmp;
+		head = *node;
+		while (head->next)
+			head = head->next;
+		head->next = tmp;
 	}
 }
 
@@ -175,7 +166,7 @@ t_cmd	*ft_processing_cmd(char *path, char **env, char **av, int ac)
 	{
 		tmp = get_cmd(path, env, av[i]);
 		if (!tmp)
-			exit_error("command not found", 127);
+			exit_error("command not found", 127, COMMAND_ERROR);
 		push_cmd(&node, tmp);
 		i++;
 	}
@@ -190,22 +181,36 @@ void	ft_processing(char **av, char **env, int ac)
 
 	t.infile = open(av[1], O_RDONLY);
 	if (t.infile == -1)
-		exit_error("Error infile", 1);
-	t.outfile = open(av[ac- 1], O_RDWR | O_CREAT | O_TRUNC, 0777);
+		exit_error("Error infile", 1, EXIT_FAILURE);
+	t.outfile = open(av[ac- 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (t.outfile == -1)
-		exit_error("Error outfile", 1);
+		exit_error("Error outfile", 1, EXIT_FAILURE);
+	t.ac = ac;
 	path = get_path(av, env);
 	node = ft_processing_cmd(path, env, av, ac);
-	/* t.infile_cmd = get_cmd(path, env, av[2]);
-	t.outfile_cmd = get_cmd(path, env, av[3]); */
-	/* if (!t.infile_cmd || !t.outfile_cmd)
-		exit_error("command not found", 127); */
 	parse_cmd(node, av);
-	run_proccess(t, av, env, 0);
+	run_proccess(t, env, node);
+	exit(0);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 || *s2)
+	{
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		s1++;
+		s2++;
+	}
+	return (0);
 }
 
 int main(int ac, char **av, char **env)
 {
+	if (ft_strcmp(av[1], "here_doc") == 0)
+	{
+		
+	}
 	ft_processing(av, env, ac);
 	exit(0);
 }

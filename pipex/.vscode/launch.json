@@ -9,6 +9,7 @@
                 "test.txt",
                 "ls -al",
                 "wc -l",
+                "cat",
                 "test2.txt"
             ],
             "stopAtEntry": false,
