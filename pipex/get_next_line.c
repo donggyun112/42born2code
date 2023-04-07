@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "libft/libft.h"
 
 char	*ft_strdup_v2(const char *string, int *start, int *flag)
 {

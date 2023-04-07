@@ -6,16 +6,12 @@
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [
-                "test.txt",
-                "ls -al",
-                "wc -l",
-                "cat",
-                "test2.txt"
+                "here_doc", "qwe", "ls -al", "wc -l", "text2.txt"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "lldb",
             "preLaunchTask": "C/C++: gcc build active file"
         }

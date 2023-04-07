@@ -1,5 +1,6 @@
 #include "pipex.h"
-#include "Libft/libft.h"
+#include "get_next_line.h"
+#include "libft/libft.h"
 
 void	printf_error(const char *name)
 {
@@ -78,11 +79,13 @@ void	run_proccess(t_av t, char **env, t_cmd *q)
 	close(t.outfile);
 }
 
-void	parse_cmd(t_cmd *t, char **av)
+void	parse_cmd(t_cmd *t, char **av, t_av q)
 {
 	int		i;
 	
 	i = 2;
+	if (q.flag == BONUS)
+		i = 3;
 	while (t)
 	{
 		t->parse_cmd = ft_split(av[i], ' ');
@@ -154,15 +157,17 @@ void	push_cmd(t_cmd **node, char *cmd)
 	}
 }
 
-t_cmd	*ft_processing_cmd(char *path, char **env, char **av, int ac)
+t_cmd	*ft_processing_cmd(char *path, char **env, char **av, t_av t)
 {
 	int		i;
 	char	*tmp;
 	t_cmd	*node;
 
 	i = 2;
+	if (t.flag == BONUS)
+		i = 3;
 	node = NULL;
-	while (i < ac - 1)
+	while (i < t.ac - 1)
 	{
 		tmp = get_cmd(path, env, av[i]);
 		if (!tmp)
@@ -173,7 +178,7 @@ t_cmd	*ft_processing_cmd(char *path, char **env, char **av, int ac)
 	return (node);
 }
 
-void	ft_processing(char **av, char **env, int ac)
+void	ft_processing_(char **av, char **env, int ac)
 {
 	char	*path;
 	t_av	t;
@@ -186,9 +191,10 @@ void	ft_processing(char **av, char **env, int ac)
 	if (t.outfile == -1)
 		exit_error("Error outfile", 1, EXIT_FAILURE);
 	t.ac = ac;
+	t.flag = !BONUS;
 	path = get_path(av, env);
-	node = ft_processing_cmd(path, env, av, ac);
-	parse_cmd(node, av);
+	node = ft_processing_cmd(path, env, av, t);
+	parse_cmd(node, av, t);
 	run_proccess(t, env, node);
 	exit(0);
 }
@@ -205,12 +211,51 @@ int	ft_strcmp(char *s1, char *s2)
 	return (0);
 }
 
+void	init_here_doc_data(t_av *t, char *limits, char **av)
+{
+	int		fd;
+	char	*line;
+
+	fd = open("tmp", O_WRONLY | O_CREAT | O_EXCL |O_TRUNC, 0600);
+	t->infile = dup(fd);
+	while (1)
+	{
+		line = get_next_line(0);
+		write(t->infile, line, ft_strlen(line));
+		if(ft_strncmp(line, limits, ft_strlen(limits)) == 0)
+			break ;
+		free(line);
+	}
+	close(t->infile);
+	t->infile = open("tmp", O_RDONLY);
+	close(fd);
+	unlink("tmp");
+	t->outfile = open(av[t->ac- 1], O_RDWR | O_CREAT | O_APPEND, 0644);
+	if (t->outfile == -1)
+		exit_error("Error outfile", 1, EXIT_FAILURE);
+}
+
+void	ft_here_doc_processing(char **av, char **env, int ac)
+{
+	t_av	t;
+	t_cmd *node;
+	char	*path;
+
+	t.ac = ac;
+	t.flag = BONUS;
+	init_here_doc_data(&t, av[2], av);
+	path = get_path(av, env);
+	node = ft_processing_cmd(path, env, av, t);
+	parse_cmd(node, av, t);
+	run_proccess(t, env, node);
+	exit(0);
+}
+
 int main(int ac, char **av, char **env)
 {
-	if (ft_strcmp(av[1], "here_doc") == 0)
-	{
-		
-	}
-	ft_processing(av, env, ac);
+	if (ft_strcmp("here_doc", av[1]) == 0)
+		ft_here_doc_processing(av, env, ac);
+	else
+		ft_processing_(av, env, ac);
 	exit(0);
 }

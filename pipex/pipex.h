@@ -14,6 +14,7 @@ typedef struct s_av
 	int		outfile;
 	int		fd[2];
 	int		status;
+	int		flag;
 	int	ac;
 }	t_av;
 
@@ -37,6 +38,6 @@ typedef struct s_parse
 
 # define COMMAND_ERROR 127
 # define ERROR			
-
+# define BONUS 1
 
 #endif
