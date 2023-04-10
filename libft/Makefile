@@ -19,7 +19,7 @@ else
 endif
 
 all : $(NAME) $(HEAD)
-
+		sleep 1
 $(NAME) : $(OBJ_CUR)
 	ar -rsc $@ $^
 

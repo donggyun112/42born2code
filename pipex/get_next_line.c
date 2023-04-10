@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junsepar <junsepar@student.42seoul.>       +#+  +:+       +#+        */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 17:25:30 by junsepar          #+#    #+#             */
-/*   Updated: 2023/02/20 19:34:39 by junsepar         ###   ########.fr       */
+/*   Created: 2023/03/20 11:44:35 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/03/28 02:21:43 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft/libft.h"
 
 char	*ft_strdup_v2(const char *string, int *start, int *flag)
 {
@@ -48,12 +47,16 @@ char	*ft_processing(int fd, int *start, int *flag, char **stack)
 	int		rd_size;
 	char	*temp;
 
-	while ((rd_size = read(0, buff, BUFFER_SIZE)))
+	rd_size = 1;
+	while (rd_size)
 	{
+		rd_size = read(fd, buff, BUFFER_SIZE);
+		if (!rd_size)
+			break ;
 		if (rd_size < 0)
 			return (NULL);
 		buff[rd_size] = '\0';
-		temp = ft_strjoin(*stack, buff);
+		temp = ft_strjojo(*stack, buff);
 		if (temp)
 		{
 			free(*stack);
@@ -64,78 +67,43 @@ char	*ft_processing(int fd, int *start, int *flag, char **stack)
 		if (ft_strchr(buff, '\n'))
 			break ;
 	}
-	temp = ft_strdup_v2(*stack + *start, &(*start), &(*flag));
-	return (temp);
+	return (ft_strdup_v2(*stack + *start, &(*start), &(*flag)));
+}
+
+int	check_val(char **temp, int flag, char **stack, int *start)
+{
+	if (*temp == NULL || flag == 1)
+	{
+		free(*stack);
+		*start = 0;
+		*stack = NULL;
+	}
+	if (*temp != NULL && !**temp)
+	{
+		free(*temp);
+		return (1);
+	}
+	return (0);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*temp;
 	static int	start;
-	static char *stack[10000];
+	static char	*stack;
 	int			flag;
 
 	temp = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (stack[fd] == NULL)
+	if (stack == NULL)
 	{
-		stack[fd] = malloc(sizeof(char) * 1);
-		*stack[fd] = '\0';
+		stack = malloc(sizeof(char) * 1);
+		*stack = '\0';
 	}
 	flag = 0;
-	temp = ft_processing(fd, &start, &flag, &stack[fd]);
-	if (temp == NULL || flag == 1)
-	{
-		free(stack[fd]);
-		start = 0;
-		stack[fd] = NULL;
-	}
-	if (temp != NULL && !*temp)
-	{
-		free(temp);
+	temp = ft_processing(fd, &start, &flag, &stack);
+	if (check_val(&temp, flag, &stack, &start))
 		return (NULL);
-	}
 	return (temp);
 }
-/*
-#include <stdio.h>
-#include <fcntl.h>
-#include <assert.h>
-
-int main()
-{
-	char *str;
-	int fd = open("test.txt", O_RDONLY);
-	char *line;
-	line = get_next_line(fd);
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("%s", line);
-	free(line);
-	close(fd);
-	fd = open("test1.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("%s", line);
-	free(line);
-	close(fd);
-	while (1)
-	{
-		str = get_next_line(4);
-		free(str);
-		if (!str)
-			break ;
-	}
-	system("leaks a.out");
-	return 0;
-}*/

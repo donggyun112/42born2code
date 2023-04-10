@@ -1,65 +1,21 @@
+NAME 	= pipex
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 # NOTE: Add files
 # ================================================
-SRC_MAN 								= push_swap \
-									  check_init_data \
-									  command_a \
-									  command_b \
-									  command_ab \
-									  list_command \
-									  ft_split \
-									  merge_sort \
-									  num_utils \
-									  set \
-									  solve \
-									  sort \
-									  sort_tools \
-									  tools \
-									  utils \
-
-SRC_BO 								= chacker \
-									  merge_sort \
-									  command_a \
-									  command_b \
-									  command_ab \
-									  list_command \
-									  ft_split \
-									  num_utils \
-									  set \
-									  check_init_data \
-									  utils \
-									  get_next_line \
+SRC 								= pipex \
 									  get_next_line_utils \
+									  get_next_line \
+									  here_doc \
+									  pre_processing \
+									  utils \
 # ================================================
 
 SRC_CUR = $(addsuffix .c, $(SRC))
-
+LIBFT		= libft
 OBJ = $(SRC_CUR:.c=.o)
-OBJ_BO = $(SRC_CUR:.c=.o)
-
-NAME_MAN 	= push_swap
-NAME_BO 	= checker
-HEAD = push_swap.h
-
-ifdef BONUS
-		SRC = $(SRC_BO)
-else
-		SRC = $(SRC_MAN)
-endif
-
-ifdef BONUS
-		OBJ_CUR = $(OBJ_BO)
-else
-		OBJ_CUR = $(OBJ)
-endif
-
-ifdef BONUS
-	NAME = $(NAME_BO)
-else
-	NAME = $(NAME_MAN)
-endif
+HEAD 	= pipex.h
 
 Black	=\033[0;30m
 Red		=\033[0;31m
@@ -70,23 +26,22 @@ Purple	=\033[0;35m
 Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
-
+LF = \e[1K\r
 all : $(NAME)
 
-LF = \e[1K\r
-
-$(NAME) : $(OBJ_CUR) $(HEAD)
-	@printf "$(LF)"
-	@$(CC) $(CFLAGS) -I $(HEAD) $(OBJ_CUR) -o $(NAME)
+$(NAME) : $(OBJ) $(HEAD)
+	@make -C $(LIBFT)
+	@mv libft/libft.a ./
+	@$(CC) $(CFLAGS) -I $(HEAD) libft.a $(OBJ) -o $(NAME)
 	@printf "$(LF)"
 
 ifdef BONUS
 	@echo "$(Green)===============================================$(DEF_COLOR)"
-	@echo "$(Green)|  🎉   Push_Swap bonus compile succsess.  🎉  |$(DEF_COLOR)"
+	@echo "$(Green)|     🎉  pipex bonus compile succsess.  🎉   |$(DEF_COLOR)"
 	@echo "$(Green)===============================================$(DEF_COLOR)"
 else
 	@echo "$(Green)===============================================$(DEF_COLOR)"
-	@echo "$(Green)|  🥳 Push_Swap mandatory compile succsess. 🥳 |$(DEF_COLOR)"
+	@echo "$(Green)|  🥳  pipex mandatory compile succsess. 🥳   |$(DEF_COLOR)"
 	@echo "$(Green)===============================================$(DEF_COLOR)"
 endif
 
@@ -97,12 +52,13 @@ endif
 
 
 clean :
-	@rm -rf *.o all bonus
-	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(White) $(OBJ_BO) $(OBJ) \n$(DEF_COLOR)"
+	@rm -rf *.o all bonus libft.a
+	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR) "
+	@make clean -C $(LIBFT)
 
 fclean : clean
-	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME), $(NAME_BO)\n"
-	@rm -rf $(NAME) $(NAME_BO)
+	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME) \n"
+	@rm -rf $(NAME)
 
 re :
 	@$(MAKE) fclean
@@ -112,7 +68,7 @@ re :
 	@$(MAKE) all
 
 bonus :
-	@make BONUS=1 $(NAME_BO)
+	@make $(NAME)
 
 .PHONY : all re clean fclean bonus
 

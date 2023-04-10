@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junsepar <junsepar@student.42seoul.>       +#+  +:+       +#+        */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 17:25:22 by junsepar          #+#    #+#             */
-/*   Updated: 2023/02/20 19:33:55 by junsepar         ###   ########.fr       */
+/*   Created: 2023/03/20 11:45:26 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/03/20 11:45:26 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-/*# include <io.h>*/
 # include <fcntl.h>
 
 //utils
@@ -29,10 +28,8 @@ char	*ft_strdup_v2(const char *string, int *start, int *flag);
 char	*ft_processing(int fd, int *start, int *flag, char **stack);
 char	*get_next_line(int fd);
 
-
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 2561
-#endif
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 2561
+# endif
 
 #endif

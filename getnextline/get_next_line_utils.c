@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junsepar <junsepar@student.42seoul.>       +#+  +:+       +#+        */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/15 17:25:33 by junsepar          #+#    #+#             */
-/*   Updated: 2023/02/20 19:33:29 by junsepar         ###   ########.fr       */
+/*   Created: 2023/03/20 12:20:34 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/03/20 12:21:13 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int	ft_strlen(char *str)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!str)
 		return (0);
 	while (str[i])
@@ -35,7 +35,9 @@ char	*ft_strjoin(const char *s1, char const *s2)
 	if (s1 != NULL)
 		len1 = ft_strlen((char *)s1);
 	len2 = ft_strlen((char *)s2);
-	if (!(buf = (char *)malloc(len1 + len2 + 1))) return (NULL);
+	buf = (char *)malloc(len1 + len2 + 1);
+	if (!buf)
+		return (NULL);
 	buf[0] = '\0';
 	if (s1 != NULL)
 		ft_strcat(buf, s1);
