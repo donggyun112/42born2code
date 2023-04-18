@@ -1,16 +1,19 @@
 NAME 	= test
 CC = cc
-CFLAGS = -Wall
+CFLAGS = -Wall -fsanitize=address -g
 
 # NOTE: Add files
 # ================================================
-SRC 								= test
+SRC 								= test \
+									  get_next_line \
+									  get_next_line_utils
 # ================================================
 
 SRC_CUR = $(addsuffix .c, $(SRC))
 LIBFT		= libft
 OBJ = $(SRC_CUR:.c=.o)
-HEAD 	= 
+HEAD 	= get_next_line.h
+HEAD_2 	= test.h
 
 Black	=\033[0;30m
 Red		=\033[0;31m
@@ -30,7 +33,7 @@ $(NAME) : $(OBJ) $(HEAD)
 	@make -C mlx_mms
 	@mv libft/libft.a ./
 	@cp mlx_mms/libmlx.dylib ./
-	@$(CC) $(CFLAGS) -I $(HEAD) libft.a -Lmlx_mms -lmlx -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+	@$(CC) $(CFLAGS) -I $(HEAD) -I $(HEAD_2) libft.a -Lmlx_mms -lmlx -framework OpenGL -framework AppKit $(OBJ) -O3 -o $(NAME)
 	@printf "$(LF)"
 
 ifdef BONUS
@@ -44,7 +47,7 @@ else
 endif
 
 .c.o : 
-	@$(CC) $(CFLAGS) -I $(HEAD) -Imlx_mms -c -o $@ $<
+	@$(CC) $(CFLAGS) -I $(HEAD) -I $(HEAD_2) -Imlx_mms -c -o $@ $<
 	@printf "$(LF)$(Green)🔰Compiling... \t$(White)$< $(DEF_COLOR)✅\b"
 	@sleep 0.08
 
