@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 22:39:27 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/18 23:37:26 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/19 02:24:34 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,8 +258,8 @@ int	map_size(char **av)
 void	set_image_data(t_image *image, t_tools tools)
 {
 	//image->volume = image->zoom_level;
-	image->w_size = 1200;
-	image->len = 1500;
+	image->w_size = 800;
+	image->len = 1100;
 	image->size = tools.s * 50;
 }
 
@@ -319,12 +319,18 @@ void	put_map_w(t_map_data **map, t_image *image)
 			if (!map[i]->next->next)
 				break ;
 			int test = (int)map[i]->z;
-			image->color = 0x00FFFFFF + 0x01000000 * (test);
+			image->color = 0x00FF4242 + 0x01000000 * (test) + test * 2;
+			if (abs(test) < 20)
+			{
+				image->color = 0x00FFFFFF + 0x01000000 * (test);
+				if (image->color < 2)
+					image->color = 0xF0FFFFFF;
+			}
 			//printf("color : %x\n", image->color);
-			drew_line(get_x_p(map[i]->x * image->volume, i * image->volume), get_y_p(map[i]->x * image->volume, i * image->volume) + map[i]->z, get_x_p(map[i]->next->x * image->volume, i * image->volume), get_y_p(map[i]->next->x * image->volume, i * image->volume) + map[i]->next->z, image);
-			drew_line(get_x_p(map[i + 1]->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->x * image->volume, (i + 1) * image->volume) + map[i + 1]->z, get_x_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume) + map[i + 1]->next->z, image);
-			drew_line(get_x_p(map[i]->x * image->volume, i * image->volume), get_y_p(map[i]->x * image->volume, i * image->volume) + map[i]->z, get_x_p(map[i + 1]->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->x * image->volume, (i + 1) * image->volume) + map[i + 1]->z, image);
-			drew_line(get_x_p(map[i]->next->x * image->volume, i * image->volume), get_y_p(map[i]->next->x * image->volume, i * image->volume) + map[i]->next->z, get_x_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume) + map[i + 1]->next->z, image);
+			drew_line(get_x_p(map[i]->x * image->volume, i * image->volume), get_y_p(map[i]->x * image->volume, i * image->volume) + map[i]->z * image->y_volume, get_x_p(map[i]->next->x * image->volume, i * image->volume), get_y_p(map[i]->next->x * image->volume, i * image->volume) + map[i]->next->z * image->y_volume, image);
+			drew_line(get_x_p(map[i + 1]->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->x * image->volume, (i + 1) * image->volume) + map[i + 1]->z * image->y_volume, get_x_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume) + map[i + 1]->next->z * image->y_volume, image);
+			drew_line(get_x_p(map[i]->x * image->volume, i * image->volume), get_y_p(map[i]->x * image->volume, i * image->volume) + map[i]->z * image->y_volume, get_x_p(map[i + 1]->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->x * image->volume, (i + 1) * image->volume) + map[i + 1]->z * image->y_volume, image);
+			drew_line(get_x_p(map[i]->next->x * image->volume, i * image->volume), get_y_p(map[i]->next->x * image->volume, i * image->volume) + map[i]->next->z * image->y_volume, get_x_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume), get_y_p(map[i + 1]->next->x * image->volume, (i + 1) * image->volume) + map[i + 1]->next->z * image->y_volume, image);
 			map[i] = map[i]->next;
 			map[i + 1] = map[i + 1]->next;
 		}
@@ -342,10 +348,12 @@ int mouse_wheel_hook(int button, int x, int y, t_vars *var)
         if (button == 4) 
 		{
 			var->image->volume *= 1.1;
+			var->image->y_volume *= 1.1;
         } else if (button == 5) {
 			var->image->volume *= 0.9;
+			var->image->y_volume *= 0.9;
         }
-		var->image->image = mlx_new_image(var->mlx, 1500, 1200);
+		var->image->image = mlx_new_image(var->mlx, 1100, 800);
 		var->image->addr = mlx_get_data_addr(var->image->image, &var->image->bit_pixel, &var->image->bit_sizeline, &var->image->bit_endian);
 		put_map_w(var->map, var->image);
 		mlx_put_image_to_window(var->mlx, var->mlx_win, var->image->image, 0, 0);
@@ -362,11 +370,12 @@ int main(int ac, char **av)
 	t_map_data	**map;
 
 	var.mlx = mlx_init();
-	var.mlx_win = mlx_new_window(var.mlx, 1500, 1200, "FDF");
-	data.image = mlx_new_image(var.mlx, 1500, 1200);
+	var.mlx_win = mlx_new_window(var.mlx, 1100, 800, "FDF");
+	data.image = mlx_new_image(var.mlx, 1100, 800);
 	data.addr = mlx_get_data_addr(data.image, &data.bit_pixel, &data.bit_sizeline, &data.bit_endian);
 	var.zoom_level = 1;
 	data.volume = var.zoom_level;
+	data.y_volume = 1;
 	map = read_map(ac, av, &data, 0);
 	put_map_w(map, &data);
 	var.map = map;

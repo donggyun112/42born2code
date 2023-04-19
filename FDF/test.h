@@ -14,6 +14,7 @@ typedef struct s_image
 	int			color;
 	int			defult_color;
 	double		volume;
+	double		y_volume;
 }	t_image;
 
 
