@@ -27,7 +27,7 @@ char	*ft_processing(int fd, int *start, int *flag, char **stack);
 char	*get_next_line(int fd);
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2561
+#  define BUFFER_SIZE 300000
 # endif
 
 #endif

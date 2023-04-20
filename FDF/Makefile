@@ -28,7 +28,7 @@ LF = \e[1K\r
 # 	@install_name_tool -change libmlx.dylib ./mlx_mms/libmlx.dylib $(NAME)
 all : $(NAME)
 
-$(NAME) : $(OBJ) $(HEAD)
+$(NAME) : $(OBJ) $(HEAD) $(HEAD_2)
 	@make -C $(LIBFT)
 	@make -C mlx_mms
 	@mv libft/libft.a ./
