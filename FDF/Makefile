@@ -6,14 +6,15 @@ CFLAGS = -Wall -fsanitize=address -g
 # ================================================
 SRC 								= test \
 									  get_next_line \
-									  get_next_line_utils
+									  get_next_line_utils \
+									  coordinat_correction
 # ================================================
 
 SRC_CUR = $(addsuffix .c, $(SRC))
 LIBFT		= libft
 OBJ = $(SRC_CUR:.c=.o)
 HEAD 	= get_next_line.h
-HEAD_2 	= test.h
+HEAD_2 	= fdf.h
 
 Black	=\033[0;30m
 Red		=\033[0;31m

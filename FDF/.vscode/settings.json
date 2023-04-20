@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"get_next_line.h": "c",
-		"math.h": "c"
+		"math.h": "c",
+		"fdf.h": "c"
 	}
 }
