@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 11:44:35 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/03/28 02:21:43 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/11 22:10:44 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,17 @@ char	*get_next_line(int fd)
 	if (check_val(&temp, flag, &stack, &start))
 		return (NULL);
 	return (temp);
+}
+#include <stdio.h>
+int main()
+{
+	char buf[100];
+	char c;
+	char *line;
+
+	int fd;
+	int rd_size;
+	rd_size = read(1, buf, 10);
+	printf("%d", rd_size);
+	return (0);
 }

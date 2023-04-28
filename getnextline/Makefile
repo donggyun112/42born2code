@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = ra -Werror
-NAME = get_next_line.a 
+NAME = a.out
 HEAD = get_next_line.h
 SRCS = get_next_line.c get_next_line_utils.c
 
@@ -9,7 +9,7 @@ OBJ = $(SRCS:.c=.o)
 all : $(NAME)
 
 $(NAME) : $(OBJ)
-	ar -rsc $@ $^
+	$(CC) -I $(HEAD) -c -o $< $@ 
 
 .c.o :
 	$(CC) -I $(HEAD) -c $< -o $@

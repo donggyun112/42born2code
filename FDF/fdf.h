@@ -6,17 +6,27 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/20 21:45:00 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/20 23:21:20 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/22 00:54:19 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
+# include <math.h>
+# include <stdlib.h>
+# include "mlx_mms/mlx.h"
+# include "libft/libft.h"
+# include <stdio.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include "get_next_line.h"
+
 typedef struct s_map_data
 {
 	float				x;
 	float				z;
+	size_t				color;
 	struct s_map_data	*next;
 }	t_map_data;
 
@@ -30,7 +40,7 @@ typedef struct s_image
 	int			size;
 	float		len;
 	float		w_size;
-	int			color;
+	size_t		color;
 	int			defult_color;
 	double		volume;
 	double		y_volume;
@@ -41,6 +51,8 @@ typedef struct s_image
 	double		tmp1;
 	double		tmp2;
 	int			st_x;
+	int			line_n;
+	double		z_rota;
 }	t_image;
 
 typedef struct s_vars
@@ -119,55 +131,67 @@ typedef struct s_drew
 # define K 40
 # define PLUS 24
 # define MINUS 27
+# define J 38
+# define H 4
 
-# include <math.h>
-# include <stdlib.h>
-# include "mlx_mms/mlx.h"
-# include "libft/libft.h"
-# include <stdio.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include "get_next_line.h"
+t_map_data	**read_map(char **av, t_image *image, int flag);
+t_map_data	**make_map(t_tools tools);
 
 // mlx_hook
-void	engine(t_vars *var);
-int		mouse_press(int button, int x, int y, t_vars *var);
-int		mouse_release(int mouse_code, int x, int y, t_vars *var);
-int		mouse_motion(int x, int y, t_vars *var);
-int		key_press(int keycode, t_vars *vars);
-int		key_release(int keycode, t_vars *vars);
-int		loop_hook(t_vars *var);
-int		close_(void *param);
-void	zoom(t_vars *var);
-void	check_controle(t_vars *var);
+void		engine(t_vars *var);
+int			mouse_press(int button, int x, int y, t_vars *var);
+int			mouse_release(int mouse_code, int x, int y, t_vars *var);
+int			mouse_motion(int x, int y, t_vars *var);
+int			key_press(int keycode, t_vars *vars);
+int			key_release(int keycode, t_vars *vars);
+int			loop_hook(t_vars *var);
+int			close_(void *param);
+void		zoom(t_vars *var);
+void		check_controle(t_vars *var);
 
 //draw
-void	draw(t_vars *var);
-void	drew_line(int st_y, int en_x, int en_y, t_image *image);
-void	drew_line2(t_map_data **map, t_image *image, int i);
-void	put_map_w(t_map_data **map, t_image *image);
-void	bresenham(t_data val, t_image *image, int color);
-void	bresenham2(t_bresenham data, t_data val, t_image *image, int color);
-void	bresenham2_2(t_bresenham data, t_data val, t_image *image, int color);
-void	bresenham2_1(t_bresenham data, t_data val, t_image *image, int color);
-void	bresenham_1(t_bresenham data, t_data val, t_image *image, int color);
-void	bresenham_1_2(t_bresenham data, t_data val, t_image *image, int color);
-void	bresenham_1_1(t_bresenham data, t_data val, t_image *image, int color);
-void	my_mlx_pixel_put(t_image *data, int x, int y, int color);
-t_map_data	**read_map(int ac, char **av, t_image *image, int flag);
+void		draw(t_vars *var);
+void		drew_line(int st_y, int en_x, int en_y, t_image *image);
+void		drew_line2(t_map_data **map, t_image *image, int i);
+void		put_map_w(t_map_data **map, t_image *image);
+void		bresenham(t_data val, t_image *image, int color);
+void		bresenham2(t_bresenham data, t_data val, t_image *image, int color);
+void		bresenham2_2(t_bresenham data, t_data val, t_image *image, \
+int color);
+void		bresenham2_1(t_bresenham data, t_data val, t_image *image, \
+int color);
+void		bresenham_1(t_bresenham data, t_data val, t_image *image, \
+int color);
+void		bresenham_1_2(t_bresenham data, t_data val, t_image *image, \
+int color);
+void		bresenham_1_1(t_bresenham data, t_data val, t_image *image, \
+int color);
+void		my_mlx_pixel_put(t_image *data, int x, int y, size_t color);
 //setting
 void		set_var(t_vars *var);
 void		set_image_data(t_image *image, t_tools tools);
 void		set_end_point(int x, int y, t_data *data);
 void		set_start_point(int x, int y, t_data *data);
-t_map_data	**make_map(t_tools tools);
+
 //Coordinate correction
-float	_y(int y, int size);
-float	_x(int x, int len);
-float	get_y_p(int x, float y, t_image *image);
-float	get_x_p(int x, float y, t_image *image);
-//tools
-void	push(t_map_data **map, float x, float z);
-int		image_size_(int flag, char **av, t_image *image);
-int		map_size(char **av);
+float		_y(int y, int size);
+float		_x(int x, int len);
+float		get_y_p(int x, float y, t_image *image);
+float		get_x_p(int x, float y, t_image *image);
+//tools	
+void		push(t_map_data **map, float x, float z, size_t color);
+int			image_size_(int flag, char **av, t_image *image);
+int			map_size(char **av);
+void		error_(char *error);
+void		set_var_2(t_map_data **map, int ac, char **av, t_vars *var);
+int			is_valid_file_type(char *file_path);
+void		ft_error(char *error);
+void		array_clear(char **tmp);
+//check
+int			check_line(t_image *image, int x);
+int			is_valid_file_type(char *file_path);
+//color
+size_t		find_color(char *line);
+size_t		atoi_hex(char *str);
+
 #endif

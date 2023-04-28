@@ -17,7 +17,7 @@ ifdef BONUS
 else
 	OBJ_CUR = $(OBJ)
 endif
-
+#\t$(White)$< 
 Black	=\033[0;30m
 Red		=\033[0;31m
 Green	=\033[0;32m
@@ -28,6 +28,8 @@ Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
 LF = \e[1K\r
+TOTAL_FILES = $(words $(SRC))
+CURRENT_FILE = 1
 
 all : $(NAME) $(HEAD)
 
@@ -37,7 +39,8 @@ $(NAME) : $(OBJ_CUR)
 
 .c.o :
 	@$(CC) $(CFLAG) -I $(HEAD) -c $< -o $@
-	@printf "$(LF)$(Green)🔰Compiling... $(Red)$(NAME) \t$(White)$< $(DEF_COLOR)✅\b"
+	@printf "$(LF)$(Cyan)[$(CURRENT_FILE)/$(TOTAL_FILES)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(Green)🔰Compiling... $(Red)$(NAME) $(DEF_COLOR)\b" $(shell echo "scale=1; ($(CURRENT_FILE) / $(TOTAL_FILES)) * 100" | bc)
+	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
 	@sleep 0.05
 
 clean : 

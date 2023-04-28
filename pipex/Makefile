@@ -27,6 +27,9 @@ Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
 LF = \e[1K\r
+TOTAL_FILES = $(words $(SRC_CUR))
+CURRENT_FILE = 1
+
 all : $(NAME)
 
 $(NAME) : $(OBJ) $(HEAD)
@@ -45,10 +48,12 @@ else
 	@echo "$(Green)===============================================$(DEF_COLOR)"
 endif
 
+
 .c.o : 
 	@$(CC) $(CFLAGS) -I $(HEAD) -c -o $@ $<
-	@printf "$(LF)$(Green)🔰Compiling... \t$(White)$< $(DEF_COLOR)✅\b"
-	@sleep 0.08
+	@printf "$(LF)$(Cyan)[$(CURRENT_FILE)/$(TOTAL_FILES)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(Green)🔰Compiling... $(Red)$(NAME) $(DEF_COLOR)\b" $(shell echo "scale=1; ($(CURRENT_FILE) / $(TOTAL_FILES)) * 100" | bc)
+	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
+	@sleep 0.5
 
 
 clean :

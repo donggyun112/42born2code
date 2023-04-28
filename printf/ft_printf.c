@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 22:37:58 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/03/28 01:24:37 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/17 23:30:50 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,3 @@ int	ft_printf(const char *format, ...)
 	va_end(args);
 	return (count);
 }
-
-int main()
-{
-	int a;
-	ft_printf("abc%d", a);
-}
-
-void test(int a, int b, int* c);

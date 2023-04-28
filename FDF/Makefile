@@ -1,13 +1,23 @@
-NAME 	= test
+NAME 	= fdf
 CC = cc
-CFLAGS = -Wall -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror
 
 # NOTE: Add files
 # ================================================
-SRC 								= test \
-									  get_next_line \
+SRC 								= get_next_line \
 									  get_next_line_utils \
-									  coordinat_correction
+									  coordinat_correction \
+									  main \
+									  bresenham \
+									  bresenham2 \
+									  controle_mouse \
+									  controle_keybord \
+									  drew \
+									  set \
+									  utils \
+									  mlx_hook \
+									  check \
+									  find_color\
 # ================================================
 
 SRC_CUR = $(addsuffix .c, $(SRC))
@@ -26,7 +36,9 @@ Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
 LF = \e[1K\r
-# 	@install_name_tool -change libmlx.dylib ./mlx_mms/libmlx.dylib $(NAME)
+TOTAL_FILES = $(words $(SRC))
+CURRENT_FILE = 1
+
 all : $(NAME)
 
 $(NAME) : $(OBJ) $(HEAD) $(HEAD_2)
@@ -49,14 +61,16 @@ endif
 
 .c.o : 
 	@$(CC) $(CFLAGS) -I $(HEAD) -I $(HEAD_2) -Imlx_mms -c -o $@ $<
-	@printf "$(LF)$(Green)🔰Compiling... \t$(White)$< $(DEF_COLOR)✅\b"
-	@sleep 0.08
+	@printf "$(LF)$(Cyan)[$(CURRENT_FILE)/$(TOTAL_FILES)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(Green)🔰Compiling... $(Red)$(NAME) $(DEF_COLOR)\b" $(shell echo "scale=1; ($(CURRENT_FILE) / $(TOTAL_FILES)) * 100" | bc)
+	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
+	@sleep 0.09
 
 
 clean :
 	@rm -rf *.o all bonus libft.a
 	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR)"
 	@make clean -C $(LIBFT)
+	@make clean -C mlx_mms
 
 fclean : clean
 	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME) \n"
@@ -70,7 +84,7 @@ re :
 	@$(MAKE) all
 
 bonus :
-	@make $(NAME)
+	@make BONUS=1 $(NAME)
 
 .PHONY : all re clean fclean bonus
 
