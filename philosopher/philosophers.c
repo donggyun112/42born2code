@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 16:52:06 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/28 23:02:25 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/04/28 23:25:27 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	philo_print(t_philo *ph, char *msg)
 
 	now = get_time();
 	pthread_mutex_lock(&ph->table->print_mutex);
-	//if (!ph->table->finish)
+	if (!ph->table->finish)
 		printf("%lld %d %s\n", now - ph->table->start_time , ph->id + 1, msg);
 	pthread_mutex_unlock(&ph->table->print_mutex);
 }
@@ -147,6 +147,19 @@ void	philo_thinking(t_philo *philo)
 	philo_print(philo, "is thinking");
 }
 
+int	check_finish(t_philo *philo)
+{
+	int	ret;
+
+	pthread_mutex_lock(&philo->table->finish_mutex);
+	if (philo->table->finish)
+		ret = 0;
+	else
+		ret = 1;
+	pthread_mutex_unlock(&philo->table->finish_mutex);
+	return (ret);
+}
+
 void	*philosophers(void *data)
 {
 	t_philo *philo;
@@ -154,13 +167,8 @@ void	*philosophers(void *data)
 	philo = (t_philo *)data;
 	while (1)
 	{
-		pthread_mutex_lock(&philo->table->finish_mutex);
-		if (philo->table->finish)
-		{
-			pthread_mutex_unlock(&philo->table->finish_mutex);
+		if (!check_finish(philo))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->table->finish_mutex);
 		if (philo->id % 2 == 0)
 			wait_(1);
 		philo_pickup_fork(philo);
