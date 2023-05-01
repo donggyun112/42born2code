@@ -16,29 +16,32 @@ typedef struct s_table
 	int	time_of_eat;
 	int	time_of_sleep;
 	int	limit_of_eat;
-	int	finish;
+	int	count;
+	int	finish_eat;
 	long long start_time;
 	pthread_mutex_t *name;
 	pthread_mutex_t print_mutex;
-	pthread_mutex_t finish_mutex;
-	pthread_mutex_t time_mutex;
-	pthread_mutex_t eat_mutex;
+	pthread_mutex_t	safe;
 	pthread_t monitoring;
+	struct s_philo	*philo;
 }	t_table;
 
 typedef struct s_philo
 {
 	int	id;
 	int num_eaten;
-	int				left_fork;
-	int				right_fork;
+	int				left;
+	int				right;
+	int				must_eat;
 	long long		last_eat;
 	long long		start_time;
-	int				finish;
 	struct s_table	*table;
 	pthread_t thread;
 }	t_philo;
 
 int		ft_atoi(const char *str);
+
+#define DIED 1
+#define END_OF_EAT 0
 
 #endif
