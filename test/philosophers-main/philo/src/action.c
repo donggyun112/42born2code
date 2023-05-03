@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongmpa <seongmpa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:15:24 by seongmpa          #+#    #+#             */
-/*   Updated: 2023/03/30 15:25:46 by seongmpa         ###   ########.fr       */
+/*   Updated: 2023/05/02 01:00:52 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,12 @@ static int	do_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->table->table_lock);
 	philo->last_eat_time = get_time();
 	pthread_mutex_unlock(&philo->table->table_lock);
+	
 	philo_pass_time(philo->table->time_to_eat);
+	
 	pthread_mutex_unlock(&philo->table->forks[philo->right]);
 	pthread_mutex_unlock(&philo->table->forks[philo->left]);
+	
 	pthread_mutex_lock(&philo->table->table_lock);
 	philo->must_eat_time--;
 	if (philo->must_eat_time == 0)

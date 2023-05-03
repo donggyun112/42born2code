@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 16:52:06 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/01 23:43:31 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/03 00:08:20 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,121 @@ long long	get_time(void)
 	long long		ms;
 
 	gettimeofday(&time, NULL);
-	if (time.tv_usec > 2)
-		ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-	else
-		ms = (time.tv_sec * 1000);
+	ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
 	return (ms);
+}
+
+static int	ft_strcmp(const char *s1, const char *s2)
+{
+	if (!s1 || !s2)
+		return (-1);
+	if (*s1 == '+')
+		s1++;
+	while (*s1 || *s2)
+	{
+		if (*s1 != *s2)
+			return (-1);
+		s1++;
+		s2++;
+	}
+	return (0);
+}
+
+int	nb_len(long long nb)
+{
+	int	length;
+
+	length = 0;
+	if (nb == 0)
+		return (1);
+	while (nb > 0)
+	{
+		nb /= 10;
+		length++;
+	}
+	return (length);
+}
+
+void	write_int(long long nb, char *arr, int *lev)
+{
+	if (nb > 9)
+		write_int(nb / 10, arr, lev);
+	arr[*lev] = (nb % 10 + '0');
+	*lev += 1;
+}
+
+char	*ft_itoa(int n)
+{
+	long long	nb;
+	int			lev;
+	char		*arr;
+
+	nb = (long long)n;
+	lev = 0;
+	if (nb < 0)
+	{
+		nb *= -1;
+		lev = 1;
+		arr = (char *)malloc(nb_len(nb) + 2);
+		if (!arr)
+			return (NULL);
+		arr[0] = '-';
+	}
+	else
+		arr = (char *)malloc(nb_len(nb) + 1);
+	if (!arr)
+		return (NULL);
+	write_int(nb, arr, &lev);
+	arr[lev] = '\0';
+	return (arr);
+}
+
+int	ft_check_data(t_check *t)
+{
+	int	j;
+
+	j = 0;
+	while (t->split_tmp[j])
+	{
+		t->data = ft_atoi(t->split_tmp[j]);
+		t->itoa_tmp = ft_itoa(t->data);
+		if (ft_strcmp(t->split_tmp[j], t->itoa_tmp) == -1 || t->data < 0)
+		{
+			free(t->itoa_tmp);
+			return (1);
+		}
+		free(t->itoa_tmp);
+		j++;
+	}
+	return (0);
+}
+
+int	ft_check(int ac, char **av)
+{
+	int		i;
+	int		j;
+	t_check	t;
+
+	i = 0;
+	while (++i < ac)
+	{
+		t.split_tmp = ft_split(av[i], ' ');
+		if (!t.split_tmp || !*(t.split_tmp))
+			return (1);
+		else
+		{
+			j = 0;
+			if (ft_check_data(&t))
+				return (1);
+			while (t.split_tmp[j])
+			{
+				free(t.split_tmp[j]);
+				j++;
+			}
+			free(t.split_tmp);
+		}
+	}
+	return (0);
 }
 
 void	philo_print(t_philo *ph, char *msg, int flag)
@@ -45,25 +155,31 @@ void	wait_(int time)
 		usleep(100);
 }
 
-int	get_info(int ac, char **av, t_table *p)
+t_table	*get_info(int ac, char **av)
 {
-	p->num_of_philo = ft_atoi(av[1]);
-	p->time_of_die = ft_atoi(av[2]);
-	p->time_of_eat = ft_atoi(av[3]);
-	p->time_of_sleep = ft_atoi(av[4]);
+	t_table *table;
+
+	table = (t_table *)malloc(sizeof(t_table));
+	table->num_of_philo = ft_atoi(av[1]);
+	table->time_of_die = ft_atoi(av[2]);
+	table->time_of_eat = ft_atoi(av[3]);
+	table->time_of_sleep = ft_atoi(av[4]);
+	table->count = 0;
+	table->name = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * table->num_of_philo);
 	if (ac == 6)
-		p->limit_of_eat = ft_atoi(av[5]);
-	return (0);
+		table->limit_of_eat = ft_atoi(av[5]);
+	else
+		table->limit_of_eat = -1;
+	return (table);
 }
 
-void	init_philo(t_table *table, t_philo *ph)
+t_philo	*init_philo(t_table *table)
 {
 	int	i;
+	t_philo *ph;
 
-	table->name = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * table->num_of_philo);
-	if (!table->name)
-		return ;
 	table->start_time = get_time();
+	ph = (t_philo *)malloc(sizeof(t_philo) * table->num_of_philo);
 	i = 0;
 	while (i < table->num_of_philo)
 	{
@@ -78,6 +194,7 @@ void	init_philo(t_table *table, t_philo *ph)
 	}
 	pthread_mutex_init(&table->safe, NULL);
 	pthread_mutex_init(&table->print_mutex, NULL);
+	return (ph);
 }
 
 void	philo_pickup_fork(t_philo *philo)
@@ -129,7 +246,7 @@ void	*philosophers(void *data)
 
 	philo = (t_philo *)data;
 	if (philo->id % 2 == 1)
-		usleep(philo->table->limit_of_eat * 300);
+		usleep(philo->table->time_of_eat * 300);
 	while (1)
 	{
 		philo_pickup_fork(philo);
@@ -156,14 +273,14 @@ void	monitor(t_philo *philo, int num)
 			pthread_mutex_lock(&philo->table->safe);
 			if (get_time() - philo[i].last_eat > philo->table->time_of_die)
 			{
-				philo_print(philo, "2", 0);
+				philo_print(philo, "died", 0);
 				for (int x = 0; x < philo->table->num_of_philo; x++)
 					pthread_detach(philo[x].thread);
 				return ;
 			}
 			if (philo[i].table->count == philo->table->num_of_philo)
 			{	
-				philo_print(philo, "1", 0);
+				philo_print(philo, "yummy", 0);
 				for (int x = 0; x < philo->table->num_of_philo; x++)
 					pthread_detach(philo[x].thread);
 				return ;
@@ -190,35 +307,38 @@ void	free_all_arg(t_table *table, t_philo *philo, int num)
 	while (++i < 10);
 }
 
-int	run(int ac, char **av)
+int	run(int ac, char **av, int *error_code)
 {
-	t_table		data;
-	t_philo		*ph;
+	t_table		*table;
+	t_philo		*philo;
 	int			i;
 
-	if (!get_info(ac, av, &data))
-	{
-		ph = (t_philo *)malloc(sizeof(t_philo) * data.num_of_philo);
-		if (!ph)
-			return (1);
-		init_philo(&data, ph);
-		data.philo = ph;
-		i = -1;
-		while (++i < data.num_of_philo)
-			pthread_create(&ph[i].thread, NULL, philosophers, (void *)&(ph[i]));
-		monitor(ph, data.num_of_philo);
-		free_all_arg(&data, ph, data.num_of_philo);
-		return (0);
-	}
-	return (1);
+	if (ft_check(ac, av))
+		return (1);
+	table = get_info(ac, av);
+	philo = init_philo(table);
+	table->philo = philo;
+	i = -1;
+	while (++i < table->num_of_philo)
+		pthread_create(&philo[i].thread, NULL, philosophers, (void *)&(philo[i]));
+	monitor(philo, table->num_of_philo);
+	free_all_arg(table, philo, table->num_of_philo);
+	return (0);
 }
 
 int main(int ac, char **av)
 {
+	int	error_code;
+
+	error_code = 0;
 	if (ac == 5 || ac == 6)
 	{
-		if (!run(ac, av))
+		if (!run(ac, av, &error_code))
 			return (0);
+		printf("program Error\n");
+		return (error_code);
 	}
+	else
+		printf("argument Error\n");
 	return (1);
 }
