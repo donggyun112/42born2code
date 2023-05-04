@@ -60,7 +60,7 @@ endif
 
 clean :
 	@rm -rf *.o all bonus
-	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR) "
+	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR)\b"
 
 fclean : clean
 	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME) \n"
