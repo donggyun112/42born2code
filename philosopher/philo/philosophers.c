@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 16:52:06 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/04 20:42:43 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/05 01:09:02 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*philosophers(void *data)
 
 	philo = (t_philo *)data;
 	if (philo->id % 2 == 1)
-		wait_(philo->table->limit_of_eat);
+		wait_(philo->table->time_of_eat);
 	while (1)
 	{
 		philo_pickup_fork(philo);

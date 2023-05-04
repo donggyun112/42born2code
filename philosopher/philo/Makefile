@@ -1,6 +1,6 @@
 NAME 	= philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror # -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror  -fsanitize=thread
 
 # NOTE: Add files
 # ================================================
@@ -60,7 +60,7 @@ endif
 
 clean :
 	@rm -rf *.o all bonus
-	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR)\b"
+	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR) "
 
 fclean : clean
 	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME) \n"

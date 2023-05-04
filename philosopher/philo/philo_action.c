@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 19:44:56 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/04 19:47:05 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/05 01:13:02 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	philo_print(t_philo *ph, char *msg, int flag)
 {
 	long long	now;
 
+	usleep(300);
 	now = get_time();
 	pthread_mutex_lock(&ph->table->print_mutex);
 	printf("%lld %d %s\n", now - ph->table->start_time, ph->id + 1, msg);
