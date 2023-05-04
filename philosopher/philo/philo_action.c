@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 19:44:56 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/05 01:13:02 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/05 01:51:26 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int	philo_eating(t_philo *philo)
 	wait_(philo->table->time_of_eat);
 	if (philo->id % 2 == 1)
 	{
-		pthread_mutex_unlock(&philo->table->fork[philo->left]);
 		pthread_mutex_unlock(&philo->table->fork[philo->right]);
+		pthread_mutex_unlock(&philo->table->fork[philo->left]);
 	}
 	else if (philo->id % 2 == 0)
 	{
-		pthread_mutex_unlock(&philo->table->fork[philo->right]);
 		pthread_mutex_unlock(&philo->table->fork[philo->left]);
+		pthread_mutex_unlock(&philo->table->fork[philo->right]);
 	}
 	pthread_mutex_lock(&philo->table->safe);
 	philo->must_eat--;
@@ -75,9 +75,12 @@ void	philo_print(t_philo *ph, char *msg, int flag)
 	long long	now;
 
 	usleep(300);
-	now = get_time();
+	if (flag == 1)
+		now = get_time() - 2;
+	else
+		now = get_time();
 	pthread_mutex_lock(&ph->table->print_mutex);
-	printf("%lld %d %s\n", now - ph->table->start_time, ph->id + 1, msg);
+	printf("%lld %d %s\n", (now - ph->table->start_time), ph->id + 1, msg);
 	if (flag == 0)
 		pthread_mutex_unlock(&ph->table->print_mutex);
 }
