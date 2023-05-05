@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 16:52:06 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/05 01:45:48 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/05 03:19:41 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ void	*philosophers(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	if (philo->id % 2 == 1)
+	if (philo->id % 2 == 1 && philo->table->num_of_philo % 2 == 1)
+		wait_(philo->table->time_of_eat * 2);
+	if (philo->table->num_of_philo % 2 == 0 && philo->id % 2 == 0)
 		wait_(philo->table->time_of_eat);
 	while (1)
 	{

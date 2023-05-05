@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 19:52:06 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/04 20:05:59 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/05 03:21:39 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	monitor(t_table *table, t_philo *philo, int num)
 	while (1)
 	{
 		i = 0;
-		usleep(100);
+		usleep(10);
 		while (i < num)
 		{
 			pthread_mutex_lock(&table->safe);

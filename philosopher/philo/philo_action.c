@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_action.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 19:44:56 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/05 01:51:26 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/05 03:15:27 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,9 @@ void	philo_print(t_philo *ph, char *msg, int flag)
 {
 	long long	now;
 
-	usleep(300);
-	if (flag == 1)
-		now = get_time() - 2;
-	else
-		now = get_time();
+	now = get_time();
+	if (ph->table->time_of_eat == 0 && ph->table->time_of_sleep == 0)
+		usleep(200);
 	pthread_mutex_lock(&ph->table->print_mutex);
 	printf("%lld %d %s\n", (now - ph->table->start_time), ph->id + 1, msg);
 	if (flag == 0)
