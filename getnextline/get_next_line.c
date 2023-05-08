@@ -107,16 +107,3 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (temp);
 }
-#include <stdio.h>
-int main()
-{
-	char buf[100];
-	char c;
-	char *line;
-
-	int fd;
-	int rd_size;
-	rd_size = read(1, buf, 10);
-	printf("%d", rd_size);
-	return (0);
-}
