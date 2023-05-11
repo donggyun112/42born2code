@@ -6,11 +6,13 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 03:27:55 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/11 04:00:40 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/10 18:55:07 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <readline/history.h>
+#include <readline/readline.h>
 
 t_cmd	*ft_processing_cmd(char *path, char **av, t_av t)
 {

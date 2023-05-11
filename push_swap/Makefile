@@ -71,6 +71,14 @@ Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
 
+TOTAL_FILES = $(words $(SRC))
+CURRENT_FILE = 1
+
+progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
+		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
+		printf "$(DEF_COLOR) $(Green)🔰Compiling... $(NAME) $(DEF_COLOR)" \
+		sleep 1
+
 all : $(NAME)
 
 LF = \e[1K\r
@@ -90,11 +98,11 @@ else
 	@echo "$(Green)===============================================$(DEF_COLOR)"
 endif
 
-.c.o : 
+.c.o :
 	@$(CC) $(CFLAGS) -I $(HEAD) -c -o $@ $<
-	@printf "$(LF)$(Green)🔰Compiling... \t$(White)$< $(DEF_COLOR)✅\b"
-	@sleep 0.08
-
+	@$(call progress_bar,$(CURRENT_FILE),$(TOTAL_FILES))
+	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
+	@sleep 0.05
 
 clean :
 	@rm -rf *.o all bonus

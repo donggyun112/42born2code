@@ -1,6 +1,6 @@
 NAME 	= philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror # -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 
 # NOTE: Add files
 # ================================================
@@ -34,6 +34,11 @@ TOTAL_FILES = $(words $(SRC_CUR))
 CURRENT_FILE = 1
 # ============================================
 
+progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
+		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
+		printf "$(DEF_COLOR) $(Green)🔰Compiling... $(NAME)" \
+		sleep 1
+
 all : $(NAME)
 
 $(NAME) : $(OBJ) $(HEAD)
@@ -53,14 +58,14 @@ endif
 
 .c.o : 
 	@$(CC) $(CFLAGS) -I $(HEAD) -c -o $@ $<
-	@printf "$(LF)$(Cyan)[$(CURRENT_FILE)/$(TOTAL_FILES)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(Green)🔰Compiling... $(Red)$(NAME) $(DEF_COLOR)\b" $(shell echo "scale=1; ($(CURRENT_FILE) / $(TOTAL_FILES)) * 100" | bc)
+	@$(call progress_bar,$(CURRENT_FILE),$(TOTAL_FILES))
 	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
-	@sleep 0.05
+	@sleep 0.1
 
 
 clean :
 	@rm -rf *.o all bonus
-	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR) "
+	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR) \b"
 
 fclean : clean
 	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME) \n"

@@ -31,6 +31,10 @@ LF = \e[1K\r
 TOTAL_FILES = $(words $(SRC))
 CURRENT_FILE = 1
 
+progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
+		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
+		printf "$(DEF_COLOR) $(Green)🔰Compiling... $(NAME) $(DEF_COLOR)" \
+
 all : $(NAME) $(HEAD)
 
 $(NAME) : $(OBJ_CUR)
@@ -38,10 +42,9 @@ $(NAME) : $(OBJ_CUR)
 
 
 .c.o :
-	@$(CC) $(CFLAG) -I $(HEAD) -c $< -o $@
-	@printf "$(LF)$(Cyan)[$(CURRENT_FILE)/$(TOTAL_FILES)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(Green)🔰Compiling... $(Red)$(NAME) $(DEF_COLOR)\b" $(shell echo "scale=1; ($(CURRENT_FILE) / $(TOTAL_FILES)) * 100" | bc)
+	@$(CC) $(CFLAGS) -I $(HEAD) -c -o $@ $<
+	@$(call progress_bar,$(CURRENT_FILE),$(TOTAL_FILES))
 	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
-	@sleep 0.05
 
 clean : 
 	@rm -rf *.o all bonus
@@ -57,3 +60,4 @@ bonus :
 	make BONUS=1 $(NAME)
 
 .PHONY : all re clean fclean bonus
+
