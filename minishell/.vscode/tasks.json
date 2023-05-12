@@ -8,6 +8,8 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "-lreadline",
+                "ft_split_quote.c",
+                "ft_split_charset.c",
                 "libft/libft.a",
                 "${file}",
                 "-o",

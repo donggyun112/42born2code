@@ -5,38 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/24 01:03:00 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/11 19:13:12 by dongkseo         ###   ########.fr       */
+/*   Created: 2023/03/14 16:42:41 by dongkseo          #+#    #+#             */
+/*   Updated: 2023/05/13 00:40:41 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "minishell.h"
 
-int	is_exist(char c, char *sep)
-{
-	int	i;
-
-	i = 0;
-	while (sep[i])
-	{
-		if (c == sep[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	ft_strmylen(char *str, char *charset)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && is_exist(str[i], charset))
-		i++;
-	return (i);
-}
-
-char	**ft_clearall(int j, char **arr)
+static char	**ft_clearall(int j, char **arr)
 {
 	while (j > 0)
 		free(arr[--j]);
@@ -44,53 +20,96 @@ char	**ft_clearall(int j, char **arr)
 	return (NULL);
 }
 
-void	make_new_malloc(char *str, char *charset, char **arr)
+int		divid_cmd(const char *s)
+{
+	if (ft_strnstr(s, ">>", 2))
+		return (2);
+	else if (ft_strnstr(s, ">", 1))
+		return (1);
+	else if (ft_strnstr(s, "|", 1))
+		return (1);
+	return (0);
+}
+
+int	string_len_(char const *s, char *c)
 {
 	int	len;
-	int	i;
+
+	len = 0;
+	len = divid_cmd(s);
+	if (len)
+		return (len);
+	while (s[len] && is_exist__(s[len], c) && !divid_cmd(&s[len]))
+		len++;
+	return (len);
+}
+
+char	**ft_putstring_(char const *s, char *c, char **arr)
+{
+	int	len;
 	int	j;
+	int	z;
 
 	j = 0;
-	while (*str)
+	while (*s)
 	{
-		if (is_exist(*str, charset))
+		if (is_exist__(*s, c))
 		{
-			len = ft_strmylen(str, charset);
+			len = string_len_(s, c);
 			arr[j] = (char *)malloc(len + 1);
 			if (!arr[j])
-				return (ft_clearall(j, arr))
-			i = 0;
-			while (*str && (is_exist(*str, charset)))
-				arr[j][i++] = *str++;
-			arr[j][i] = '\0';
+				return (ft_clearall(j, arr));
+			z = 0;
+			while (len-- > 0)
+				arr[j][z++] = *s++;
+			arr[j][z] = '\0';
 			j++;
 		}
 		else
-			str++;
+			s++;
 	}
+	return (arr);
 }
 
-char	**ft_split(char *str, char *charset)
+int	word_count_(char const *s, char *c)
 {
-	int		i;
-	int		word;
-	char	**arr;
+	int	count;
 
-	i = 0;
-	word = 0;
-	while (str[i])
+	count = 0;
+	while (*s)
 	{
-		if (is_exist(str[i], charset))
+		if (is_exist__(*s, c))
 		{
-			word++;
-			while ((is_exist(str[i], charset)) && str[i])
-				i++;
+			count++;
+			if (divid_cmd(s))
+			{
+				count++;
+				s++;
+			}
+			while (*s && is_exist__(*s, c) && !divid_cmd(s))
+				s++;
 		}
 		else
-			i++;
+			s++;
 	}
-	arr = (char **)malloc(sizeof(char *) * (word + 1));
-	arr[word] = NULL;
-	make_new_malloc(str, charset, arr);
+	return (count);
+}
+
+char	**ft_split_charset(char const *s, char *c)
+{
+	char	**arr;
+	int		count;
+
+	count = word_count_(s, c);
+	arr = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!arr)
+		return (NULL);
+	arr = ft_putstring_(s, c, arr);
+	if (!arr)
+	{
+		free(arr);
+		return (NULL);
+	}
+	arr[count] = NULL;
 	return (arr);
 }

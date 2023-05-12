@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 03:27:55 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/10 18:55:07 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:35:42 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,3 +119,5 @@ int	main(int ac, char **av, char **env)
 		ft_processing_(av, env, ac);
 	exit(0);
 }
+
+echo -n "hellow world"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
+/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:42:41 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/03/14 18:27:16 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:52:26 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	**ft_putstring(char const *s, char c, char **arr)
 			if (!arr[j])
 				return (ft_clearall(j, arr));
 			z = 0;
-			while (*s && *s != c)
+			while (len-- > 0)
 				arr[j][z++] = *s++;
 			arr[j][z] = '\0';
 			j++;
