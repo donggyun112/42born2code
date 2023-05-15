@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:01:22 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/13 00:57:38 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/14 03:33:30 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**copy_env(char **env)
 	i = 0;
 	while (env[i])
 		i++;
-	tmp = (char **)malloc(sizeof(char *) * i);
+	tmp = (char **)malloc(sizeof(char *) * (i + 1));
 	if (!tmp)
 		return (NULL);
 	i = -1;
@@ -99,8 +99,14 @@ int	main(int ac, char *av[], char *env[])
 		}
 		free(input_command);
 	}
-	ft_putstr_fd("\x1b[1A", STDOUT_FILENO);
+	//ft_putstr_fd("\x1b[1A", STDOUT_FILENO);
 	ft_putstr_fd("\033[2D", STDOUT_FILENO);
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	return (0);
 }
+
+// >> , > 무조건 뒤에 인자가 와야함
+// 명령어는 더블 쿼터로 감쌀 수 있다
+// 파이프 리다이렉션 다이렉션은 문자열로 감싸질 수 없다.
+// 명령어 뒤에 파이프만 온 경우에 쉘 입력모드로 전환된다.
+// 리다이렉션 뒤에는 무조건 파일이름이 와야합니다 파이프 리다이렉션 다이렉션은 올 수 없습니다

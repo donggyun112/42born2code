@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quote.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:42:41 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/13 00:51:40 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/14 03:41:53 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,13 +144,13 @@ static int	word_count__(char const *s, char *c, t_table *table)
 			count++;
 			his = s;
 			s = quote_string(s, c, &count);
-			if (his != s)
-				continue; ;
 			if (!s)
 			{
 				table->syntax_error = 1;
 				return (-1);
 			}
+			if (his != s)
+				continue;
 			while (*s && is_exist__(*s, c) && is_quote(*s))
 				s++;
 		}
