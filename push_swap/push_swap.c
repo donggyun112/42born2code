@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 23:03:34 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/04 01:55:55 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/05/29 01:48:40 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	leaks(void)
 {
 	system("leaks push_swap");
 }
-
+#include <stdio.h>
 int	main(int ac, char **av)
 {
 	t_info	*stack_a;
