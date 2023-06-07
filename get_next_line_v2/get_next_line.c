@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dongkseo <student.42seoul.kr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 12:33:32 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/05/09 02:19:22 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/06/03 19:34:38 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,3 @@ char	*get_next_line(int fd)
 	}
 	return (d.tmp2);
 }
-
-/* int main()
-{
-	char *line;
-	int fd;
-	fd = open("read_error.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf ("%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf ("%s", line);
-	free(line);
-	line = get_next_line(fd);
-	printf ("%s", line);
-	free(line);
-} */
