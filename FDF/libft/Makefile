@@ -19,22 +19,22 @@ else
 endif
 #\t$(White)$< 
 Black	=\033[0;30m
-Red		=\033[0;31m
+Red		=\033[1;31m
 Green	=\033[0;32m
 Yellow	=\033[0;33m
 Blue	=\033[0;34m
 Purple	=\033[1;35m
 Cyan	=\033[0;36m
-White	=\033[0;37m
+White	=\033[1;37m
 Gray    = \033[0;90m
 DEF_COLOR = \033[0;39m
 LF = \e[1K\r
 TOTAL_FILES = $(words $(SRC))
 CURRENT_FILE = 1
 
-progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
-		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
-		printf "\n\033[2K$(DEF_COLOR)$(Gray)Compiling...  $< $(DEF_COLOR) \033[A\033[999C\e[?25l" \
+progress_bar = printf "$(LF)$(Red)[ ♔Compiling...♔ ]$(DEF_COLOR) $(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
+		printf " $(White)[%-*s%s]$(DEF_COLOR)" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
+		printf "\n\033[2K$(DEF_COLOR)  ✔︎ $(Cyan)Compiling... $< $(DEF_COLOR) \033[A\033[999C\e[?25l" \
 
 all : $(NAME) $(HEAD)
 
@@ -54,8 +54,7 @@ clean :
 fclean : clean
 	rm -rf $(NAME)
 
-re :
-	$(MAKE) fclean
+re : fclean
 	$(MAKE) all
 
 bonus :
