@@ -77,7 +77,7 @@ CURRENT_FILE = 1
 
 progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
 		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
-		printf "\n\033[2K$(DEF_COLOR)$(Gray)Compiling...  $< $(DEF_COLOR) \033[A\033[999C" \
+		printf "\n\033[2K$(DEF_COLOR)$(Gray)Compiling...  $< $(DEF_COLOR) \033[A\033[999C\e[?25l" \
 		sleep 1
 
 all : $(NAME)
@@ -85,9 +85,8 @@ all : $(NAME)
 LF = \e[1K\r
 
 $(NAME) : $(OBJ_CUR) $(HEAD)
-	@printf "$(LF)"
 	@$(CC) $(CFLAGS) -I $(HEAD) $(OBJ_CUR) -o $(NAME)
-	@printf "$(LF)"
+	@printf "\n\033[1;32mCompilation complete. $(NAME) has been created.\033[0m\n\n\e[?25h"
 
 ifdef BONUS
 	@echo "$(Green)===============================================$(DEF_COLOR)"
