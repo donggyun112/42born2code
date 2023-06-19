@@ -67,6 +67,7 @@ Green	=\033[0;32m
 Yellow	=\033[0;33m
 Blue	=\033[0;34m
 Purple	=\033[0;35m
+Gray    = \033[0;90m
 Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
@@ -76,7 +77,7 @@ CURRENT_FILE = 1
 
 progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
 		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
-		printf "$(DEF_COLOR) $(Green)🔰Compiling... $(NAME) $(DEF_COLOR) | $(Cyan) $< $(DEF_COLOR) " \
+		printf "\n\033[2K$(DEF_COLOR)$(Gray)Compiling...  $< $(DEF_COLOR) \033[A\033[999C" \
 		sleep 1
 
 all : $(NAME)

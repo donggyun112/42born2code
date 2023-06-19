@@ -31,18 +31,19 @@ Red		=\033[0;31m
 Green	=\033[0;32m
 Yellow	=\033[0;33m
 Blue	=\033[0;34m
-Purple	=\033[0;35m
+Purple	=\033[1;35m
 Cyan	=\033[0;36m
 White	=\033[0;37m
 DEF_COLOR = \033[0;39m
+Gray    = \033[0;90m
 LF = \e[1K\r
 TOTAL_FILES = $(words $(SRC))
 CURRENT_FILE = 1
 
+
 progress_bar = printf "$(LF)$(Cyan)[$(1)/$(2)]$(DEF_COLOR) [$(Yellow)%0.1f%%$(DEF_COLOR)] $(DEF_COLOR)\b" $(shell echo "scale=1; ($(1) / $(2)) * 100" | bc); \
 		printf " [%-*s%s]" 25 "$(shell printf '%0.*s' $$(($(1) * 25 / $(2))) '=========================================================================')>" ""; \
-		printf "$(DEF_COLOR) $(Green)🔰Compiling... $(NAME) | $(Cyan) $< $(DEF_COLOR) " \
-		sleep 1
+		printf "\n\033[2K$(DEF_COLOR)$(Gray)Compiling...  $< $(DEF_COLOR) \033[A\033[999C" \
 
 all : $(NAME)
 
@@ -64,27 +65,26 @@ else
 	@echo "$(Green)===============================================$(DEF_COLOR)"
 endif
 
-.c.o : 
+.c.o : clear
 	@$(CC) $(CFLAGS) -I $(HEAD) -c -o $@ $<
 	@$(call progress_bar,$(CURRENT_FILE),$(TOTAL_FILES))
 	@$(eval CURRENT_FILE=$(shell echo $$(($(CURRENT_FILE)+1))))
-	@sleep 0.1
 
 
 clean :
 	@rm -rf *.o all bonus libft.a
-	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) \n$(DEF_COLOR)"
 	@make clean -C $(LIBFT)
+	@printf "$(LF)🚧 $(Yellow)Cleaning...🚨 $(Purple)libft$(White) $(OBJ) $(DEF_COLOR)"
 
 fclean : clean
-	@printf "$(LF)🚧 $(Red)Cleaning...🚨 $(White)$(NAME) \n"
 	@rm -rf $(NAME) libmlx.dylib
+	@echo "\n🚧 $(Red)Cleaning...🚨 $(White)$(NAME)"
 
 re :
 	@$(MAKE) fclean
 	@sleep 0.5
 	@clear
-	@printf "$(Purple)>>REBUILD<<\n"
+	@printf "$(Purple)>>REBUILD<<\n\n"
 	@$(MAKE) all
 
 bonus :
