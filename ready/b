@@ -1,0 +1,54 @@
+1d0
+< #include <unistd.h>
+2a2
+> #include <unistd.h>
+7c7
+< 	int	i = 0;
+---
+> 	int i = 0;
+13c13
+< int ft_execute(char **argv, int i, int tmp_fd, char **env)
+---
+> int	ft_execute(char **argv, int i, int tmp_fd, char **env)
+18,20c18
+< 	ft_putstr_fd2("error: cannot execute ");
+< 	ft_putstr_fd2(argv[0]);
+< 	write(2, "\n", 1);
+---
+> 	ft_putstr_fd2("error\n");
+24c22
+< int	main(int argc, char **argv, char **env)
+---
+> int main(int ac, char **argv, char **env)
+26,30c24
+< 	(void)argc;
+< 	int	i;
+< 	int	pid;
+< 	int	fd[2];
+< 	int	tmp_fd;
+---
+> 	int pid, fd[2], i, tmp_fd;
+39c33
+< 		while (argv[i] && strcmp(argv[i], ";") && strcmp(argv[i], "|"))
+---
+> 		while (argv[i] && strcmp(argv[i], "|") && strcmp(argv[i], ";"))
+44c38
+< 				ft_putstr_fd2("error: cd: bad arguments\n");
+---
+> 				ft_putstr_fd2("error: cd \n");
+46,50c40
+< 			{
+< 				ft_putstr_fd2("error: cd: cannot change directory to ");
+< 				ft_putstr_fd2(argv[1]);
+< 				ft_putstr_fd2("\n");
+< 			}
+---
+> 				ft_putstr_fd2("error change\n");
+58c48
+< 				if (ft_execute(argv, i , tmp_fd, env))
+---
+> 				if (ft_execute(argv, i, tmp_fd, env))
+78c68
+< 				if (ft_execute(argv, i , tmp_fd, env))
+---
+> 				if (ft_execute(argv, i, tmp_fd, env))
