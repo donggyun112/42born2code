@@ -6,11 +6,12 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:11:35 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/11 01:35:57 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/06/21 20:53:56 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+#include <stdio.h>
 
 void	get_pivot(int *p1, int *p2, t_info *a, int size)
 {
@@ -30,8 +31,10 @@ void	get_pivot(int *p1, int *p2, t_info *a, int size)
 		i++;
 	}
 	merge_sort(arr, i);
-	*p1 = arr[(i + a->is_odd) / 3 - 1];
-	*p2 = arr[((i + a->is_odd) / 3) * 2 - 1];
+	// for (int x = 0; x < z; x++)
+	// 	printf("%d\n", arr[x]);
+	*p1 = arr[(i + 1) / 3 - 1];
+	*p2 = arr[((i + 1) / 3) * 2 - 1];
 	free(arr);
 }
 
@@ -76,6 +79,7 @@ void	a_to_b(t_info *a, t_info *b, int cnt)
 		return ;
 	}
 	get_pivot(&t.pivot2, &t.pivot1, a, cnt);
+	// printf("pivot1 : %d \n pivoit2 : %d\n", t.pivot1, t.pivot2);
 	while (cnt-- > 0)
 	{
 		if (a->tail->data > t.pivot1)
