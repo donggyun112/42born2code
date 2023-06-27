@@ -7,7 +7,6 @@ CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 SRC 								= check_arg \
 									  ft_itoa \
 									  ft_atoi \
-									  ft_split \
 									  init_data \
 									  monitor \
 									  philo_action \
