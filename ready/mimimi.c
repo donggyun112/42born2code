@@ -17,7 +17,7 @@ int		ft_execute(char **argv, int i, int tmp_fd, char **env)
 	execve(argv[0], argv, env);
 	ft_putstr_fd2("error: cannot execute ");
 	ft_putstr_fd2(argv[0]);
-	write(2, "\n", 1);
+	ft_putstr_fd2("\n");
 	return (1);
 }
 
