@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 03:27:43 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/04/11 03:44:12 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/06/27 18:22:11 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	init_here_doc_data(t_av *t, char *limits, char **av)
 	while (1)
 	{
 		line = get_next_line(0);
-		if (ft_strcmp(line, t->tmp) == 0)
+		if (!line || ft_strcmp(line, t->tmp) == 0)
 			break ;
 		write(t->infile, line, ft_strlen(line));
 		free(line);
