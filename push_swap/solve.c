@@ -6,7 +6,7 @@
 /*   By: dongkseo <dongkseo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:11:35 by dongkseo          #+#    #+#             */
-/*   Updated: 2023/06/21 20:53:56 by dongkseo         ###   ########.fr       */
+/*   Updated: 2023/06/30 01:30:11 by dongkseo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ void	get_pivot(int *p1, int *p2, t_info *a, int size)
 		i++;
 	}
 	merge_sort(arr, i);
-	// for (int x = 0; x < z; x++)
-	// 	printf("%d\n", arr[x]);
-	*p1 = arr[(i + 1) / 3 - 1];
-	*p2 = arr[((i + 1) / 3) * 2 - 1];
+	*p1 = arr[(i + a->is_odd) / 3 - 1];
+	*p2 = arr[((i + a->is_odd) / 3) * 2 - 1];
 	free(arr);
 }
 
